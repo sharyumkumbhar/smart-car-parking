@@ -1,6 +1,8 @@
-// ==============================
-// SUPABASE CONFIGURATION
-// ==============================
+// ======================================
+// SMART CAR PARKING - SCRIPT.JS
+// ======================================
+
+// ---------- SUPABASE CONFIG ----------
 
 const SUPABASE_URL = "https://yokdshtjbjlhqmmrnpxh.supabase.co";
 
@@ -11,28 +13,24 @@ const sb = window.supabase.createClient(
     SUPABASE_KEY
 );
 
-// ==============================
-// TEST CONNECTION
-// ==============================
+// ---------- TEST CONNECTION ----------
 
 async function testConnection() {
 
     const { data, error } = await sb
         .from("cars")
-        .select("*");
+        .select("*")
+        .limit(1);
 
     if (error) {
         console.log(error);
     } else {
-        console.log("✅ Supabase Connected");
-        console.log(data);
+        console.log("✅ Supabase Connected Successfully");
     }
 
 }
 
-// ==============================
-// CUSTOMER NOTIFY OFFICE
-// ==============================
+// ---------- CUSTOMER WEBSITE ----------
 
 async function notifyOffice() {
 
@@ -41,38 +39,34 @@ async function notifyOffice() {
     if (qr === "") {
 
         document.getElementById("msg").innerHTML =
-        "❌ Please enter QR ID.";
+            "❌ Please enter QR ID.";
 
         return;
 
     }
 
     const { error } = await sb
-    .from("notifications")
-    .insert([
-
-        {
-            qr_id: qr,
-            car_number: "",
-            message: "Vehicle is blocking another vehicle.",
-            status: "NEW"
-        }
-
-    ]);
+        .from("notifications")
+        .insert([
+            {
+                qr_id: qr,
+                car_number: "",
+                message: "Vehicle is blocking another vehicle.",
+                status: "NEW"
+            }
+        ]);
 
     if (error) {
 
         console.log(error);
 
         document.getElementById("msg").innerHTML =
-        "❌ " + error.message;
+            "❌ " + error.message;
 
-    }
-
-    else {
+    } else {
 
         document.getElementById("msg").innerHTML =
-        "✅ Parking Office has been notified.";
+            "✅ Parking Office has been notified.";
 
         document.getElementById("qrID").value = "";
 
@@ -80,9 +74,7 @@ async function notifyOffice() {
 
 }
 
-// ==============================
-// OPERATOR LOAD NOTIFICATIONS
-// ==============================
+// ---------- OPERATOR WEBSITE ----------
 
 async function loadNotifications() {
 
@@ -93,18 +85,16 @@ async function loadNotifications() {
     table.innerHTML = "";
 
     const { data, error } = await sb
-    .from("notifications")
-    .select("*")
-    .order("id",{ascending:false});
+        .from("notifications")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-    if(error){
-
+    if (error) {
         console.log(error);
         return;
-
     }
 
-    data.forEach(function(item){
+    data.forEach(function(item) {
 
         table.innerHTML += `
         <tr>
@@ -119,16 +109,14 @@ async function loadNotifications() {
 
 }
 
-// ==============================
-// AUTO START
-// ==============================
+// ---------- AUTO START ----------
 
-window.onload = function(){
+window.onload = function () {
 
     testConnection();
 
     loadNotifications();
 
-    setInterval(loadNotifications,3000);
+    setInterval(loadNotifications, 3000);
 
 };
