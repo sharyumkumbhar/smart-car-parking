@@ -1,1 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Car Parking - Customer</title>
 
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="script.js"></script>
+</head>
+
+<body>
+
+<h1>🚗 Smart Car Parking</h1>
+
+<h2>Customer Panel</h2>
+
+<p>Enter the QR ID of the parked vehicle.</p>
+
+<input
+    type="text"
+    id="qrID"
+    placeholder="Enter QR ID (Example: QR001)"
+>
+
+<br><br>
+
+<button onclick="notifyOffice()">
+    Notify Parking Office
+</button>
+
+<p id="msg"></p>
+
+</body>
+</html>
