@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Smart Car Parking - Operator Panel</title>
 
 <link rel="stylesheet" href="style.css">
@@ -15,15 +17,87 @@
 
 <header>
 
-<h1>🚗 Smart Car Parking</h1>
+    <h1>🚗 Smart Car Parking</h1>
 
-<p>Operator Dashboard</p>
+    <p>Operator Dashboard</p>
 
 </header>
 
+
 <div class="container">
 
-<h2>Live Notifications</h2>
+
+<!-- =====================================
+     VEHICLE REGISTRATION
+===================================== -->
+
+<h2>🚘 Register Vehicle</h2>
+
+<div class="registration-form">
+
+    <label>QR ID</label>
+    <input
+        type="text"
+        id="QR_ID"
+        placeholder="Example: QR001"
+    >
+
+    <label>Owner Name</label>
+    <input
+        type="text"
+        id="OWNER_NAME"
+        placeholder="Enter owner name"
+    >
+
+    <label>Car Number</label>
+    <input
+        type="text"
+        id="CAR_NUMBER"
+        placeholder="Example: GA07AB1234"
+    >
+
+    <label>Phone Number</label>
+    <input
+        type="text"
+        id="PHONE_NUMBER"
+        placeholder="Enter phone number"
+    >
+
+    <label>Parking Time (minutes)</label>
+    <input
+        type="number"
+        id="PARKING_TIME"
+        placeholder="Example: 60"
+    >
+
+    <label>Status</label>
+    <select id="STATUS">
+
+        <option value="PARKED">PARKED</option>
+        <option value="NEW">NEW</option>
+        <option value="EXITED">EXITED</option>
+
+    </select>
+
+    <br><br>
+
+    <button onclick="registerVehicle()">
+        ➕ Register Vehicle
+    </button>
+
+    <p id="registrationMsg"></p>
+
+</div>
+
+
+<hr>
+
+
+<!-- =====================================
+     LIVE NOTIFICATIONS
+===================================== -->
+
+<h2>🔔 Live Notifications</h2>
 
 <table border="1" width="100%">
 
@@ -33,8 +107,10 @@
 
 <th>ID</th>
 <th>QR ID</th>
+<th>Car Number</th>
 <th>Message</th>
 <th>Status</th>
+<th>Time</th>
 
 </tr>
 
@@ -46,7 +122,9 @@
 
 </table>
 
+
 </div>
+
 
 <script src="script.js"></script>
 
