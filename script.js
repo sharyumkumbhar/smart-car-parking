@@ -1,122 +1,185 @@
-// ======================================
-// SMART CAR PARKING - SCRIPT.JS
-// ======================================
-
-// ---------- SUPABASE CONFIG ----------
+// ==========================================
+// SMART CAR PARKING - SUPABASE CONNECTION
+// ==========================================
 
 const SUPABASE_URL = "https://yokdshtjbjlhqmmrnpxh.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_2ZDoGT6xIclKRzqbE78Vnw_Uwp7BRdK";
 
-const SUPABASE_KEY = "sb_publishable_2ZDoGT6xIclKRzqbE78Vnw_Uwp7BRdK";
-
-const sb = window.supabase.createClient(
+const db = window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_KEY
+    SUPABASE_ANON_KEY
 );
 
-// ---------- TEST CONNECTION ----------
 
-async function testConnection() {
-
-    const { data, error } = await sb
-        .from("cars")
-        .select("*")
-        .limit(1);
-
-    if (error) {
-        console.log(error);
-    } else {
-        console.log("✅ Supabase Connected Successfully");
-    }
-
-}
-
-// ---------- CUSTOMER WEBSITE ----------
+// ==========================================
+// CUSTOMER PANEL
+// ==========================================
 
 async function notifyOffice() {
 
-    const qr = document.getElementById("qrID").value.trim();
+    const qrInput = document.getElementById("qrID");
+    const msg = document.getElementById("msg");
 
-    if (qr === "") {
-
-        document.getElementById("msg").innerHTML =
-            "❌ Please enter QR ID.";
-
+    if (!qrInput || !msg) {
         return;
-
     }
 
-    const { error } = await sb
+    const qrID = qrInput.value.trim();
+
+    if (qrID === "") {
+        msg.innerText = "❌ Please enter a QR ID.";
+        return;
+    }
+
+    msg.innerText = "Checking vehicle...";
+
+    // ------------------------------------------
+    // Find car using QR ID
+    // ------------------------------------------
+
+    const { data: car, error: carError } = await db
+        .from("cars")
+        .select("QR_ID, CAR_NUMBER")
+        .eq("QR_ID", qrID)
+        .maybeSingle();
+
+    if (carError) {
+        console.error("Car search error:", carError);
+        msg.innerText = "❌ Error finding vehicle.";
+        return;
+    }
+
+    if (!car) {
+        msg.innerText = "❌ QR ID not found.";
+        return;
+    }
+
+    // ------------------------------------------
+    // Create notification
+    // ------------------------------------------
+
+    const { error: notificationError } = await db
         .from("notifications")
         .insert([
             {
-                qr_id: qr,
-                car_number: "",
-                message: "Vehicle is blocking another vehicle.",
+                qr_id: qrID,
+                car_number: car.CAR_NUMBER,
+                message: "Vehicle may be blocking another vehicle.",
                 status: "NEW"
             }
         ]);
 
-    if (error) {
+    if (notificationError) {
+        console.error(
+            "Notification error:",
+            notificationError
+        );
 
-        console.log(error);
-
-        document.getElementById("msg").innerHTML =
-            "❌ " + error.message;
-
-    } else {
-
-        document.getElementById("msg").innerHTML =
-            "✅ Parking Office has been notified.";
-
-        document.getElementById("qrID").value = "";
-
-    }
-
-}
-
-// ---------- OPERATOR WEBSITE ----------
-
-async function loadNotifications() {
-
-    const table = document.getElementById("notificationTable");
-
-    if (!table) return;
-
-    table.innerHTML = "";
-
-    const { data, error } = await sb
-        .from("notifications")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-    if (error) {
-        console.log(error);
+        msg.innerText =
+            "❌ Could not send notification.";
         return;
     }
 
-    data.forEach(function(item) {
+    msg.innerText =
+        "✅ Parking office has been notified!";
 
-        table.innerHTML += `
-        <tr>
-            <td>${item.id}</td>
-            <td>${item.qr_id}</td>
-            <td>${item.message}</td>
-            <td>${item.status}</td>
-        </tr>
-        `;
-
-    });
-
+    qrInput.value = "";
 }
 
-// ---------- AUTO START ----------
 
-window.onload = function () {
+// ==========================================
+// OPERATOR PANEL
+// ==========================================
 
-    testConnection();
+async function loadNotifications() {
 
-    loadNotifications();
+    const table =
+        document.getElementById("notificationTable");
 
-    setInterval(loadNotifications, 3000);
+    if (!table) {
+        return;
+    }
 
-};
+    table.innerHTML =
+        "<tr><td colspan='4'>Loading...</td></tr>";
+
+    const { data, error } = await db
+        .from("notifications")
+        .select("*")
+        .order("created_at", {
+            ascending: false
+        });
+
+    if (error) {
+
+        console.error(
+            "Notification loading error:",
+            error
+        );
+
+        table.innerHTML =
+            "<tr><td colspan='4'>❌ Error loading notifications</td></tr>";
+
+        return;
+    }
+
+    if (!data || data.length === 0) {
+
+        table.innerHTML =
+            "<tr><td colspan='4'>No notifications yet.</td></tr>";
+
+        return;
+    }
+
+    table.innerHTML = "";
+
+    data.forEach(notification => {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${notification.id}</td>
+
+            <td>${notification.qr_id || ""}</td>
+
+            <td>
+                ${notification.message || ""}
+                <br>
+                <strong>
+                    Car:
+                    ${notification.car_number || "Not found"}
+                </strong>
+            </td>
+
+            <td>${notification.status || ""}</td>
+        `;
+
+        table.appendChild(row);
+    });
+}
+
+
+// ==========================================
+// AUTOMATICALLY LOAD OPERATOR PANEL
+// ==========================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        if (
+            document.getElementById(
+                "notificationTable"
+            )
+        ) {
+            loadNotifications();
+
+            // Refresh every 5 seconds
+            setInterval(
+                loadNotifications,
+                5000
+            );
+        }
+
+    }
+);
