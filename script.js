@@ -2,8 +2,8 @@
 // SMART CAR PARKING - SUPABASE CONNECTION
 // ==========================================
 
-const SUPABASE_URL = "https://yokdshtjbjlhqmmrnpxh.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_2ZDoGT6xIclKRzqbE78Vnw_Uwp7BRdK";
+const SUPABASE_URL = "xxxxxxxxxxxxxxxxxxxxxxxxxxx";
+const SUPABASE_ANON_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
 const db = window.supabase.createClient(
     SUPABASE_URL,
