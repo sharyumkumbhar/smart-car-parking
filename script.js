@@ -2,8 +2,7 @@
 // SMART CAR PARKING - SUPABASE CONNECTION
 // ==========================================
 
-const SUPABASE_URL = "https://yokdshtjbjlhqmmrnpxh.supabase.co
-";
+const SUPABASE_URL = "https://yokdshtjbjlhqmmrnpxh.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_2ZDoGT6xIclKRzqbE78Vnw_Uwp7BRdK";
 
 const db = window.supabase.createClient(
@@ -32,10 +31,9 @@ async function notifyOffice() {
 
     msg.innerText = "🔍 Finding vehicle...";
 
-    // Find vehicle from cars table
     const { data: car, error: carError } = await db
         .from("cars")
-        .select("*")
+        .select("QR_ID, CAR_NUMBER")
         .eq("QR_ID", qrID)
         .maybeSingle();
 
@@ -57,7 +55,6 @@ async function notifyOffice() {
         return;
     }
 
-    // Create notification
     const { error: notificationError } = await db
         .from("notifications")
         .insert([
@@ -70,19 +67,12 @@ async function notifyOffice() {
         ]);
 
     if (notificationError) {
-        console.error(
-            "Notification error:",
-            notificationError
-        );
-
-        msg.innerText =
-            "❌ Could not send notification.";
-
+        console.error("Notification error:", notificationError);
+        msg.innerText = "❌ Could not send notification.";
         return;
     }
 
-    msg.innerText =
-        "✅ Parking office has been notified!";
+    msg.innerText = "✅ Parking office has been notified!";
 
     qrInput.value = "";
 }
@@ -123,16 +113,12 @@ async function registerVehicle() {
         phoneNumber === "" ||
         parkingTime === ""
     ) {
-
-        msg.innerText =
-            "❌ Please fill all fields.";
-
+        msg.innerText = "❌ Please fill all fields.";
         return;
     }
 
 
-    msg.innerText =
-        "⏳ Registering vehicle...";
+    msg.innerText = "⏳ Registering vehicle...";
 
 
     const { data, error } = await db
@@ -151,37 +137,22 @@ async function registerVehicle() {
 
 
     if (error) {
-
-        console.error(
-            "Vehicle registration error:",
-            error
-        );
-
-        msg.innerText =
-            "❌ Error: " + error.message;
-
+        console.error("Vehicle registration error:", error);
+        msg.innerText = "❌ Error: " + error.message;
         return;
     }
 
 
-    console.log(
-        "Vehicle registered:",
-        data
-    );
+    console.log("Vehicle registered:", data);
 
+    msg.innerText = "✅ Vehicle registered successfully!";
 
-    msg.innerText =
-        "✅ Vehicle registered successfully!";
-
-
-    // Clear fields
 
     document.getElementById("QR_ID").value = "";
     document.getElementById("OWNER_NAME").value = "";
     document.getElementById("CAR_NUMBER").value = "";
     document.getElementById("PHONE_NUMBER").value = "";
     document.getElementById("PARKING_TIME").value = "";
-
 }
 
 
@@ -211,10 +182,7 @@ async function loadNotifications() {
 
     if (error) {
 
-        console.error(
-            "Notification loading error:",
-            error
-        );
+        console.error("Notification loading error:", error);
 
         table.innerHTML =
             "<tr><td colspan='6'>❌ Error loading notifications</td></tr>";
@@ -237,51 +205,26 @@ async function loadNotifications() {
 
     data.forEach(notification => {
 
-        const row =
-            document.createElement("tr");
-
+        const row = document.createElement("tr");
 
         const date =
             notification.created_at
-                ? new Date(
-                    notification.created_at
-                  ).toLocaleString()
+                ? new Date(notification.created_at).toLocaleString()
                 : "";
 
 
         row.innerHTML = `
-
-            <td>
-                ${notification.id || ""}
-            </td>
-
-            <td>
-                ${notification.qr_id || ""}
-            </td>
-
-            <td>
-                ${notification.car_number || "Not found"}
-            </td>
-
-            <td>
-                ${notification.message || ""}
-            </td>
-
-            <td>
-                ${notification.status || ""}
-            </td>
-
-            <td>
-                ${date}
-            </td>
-
+            <td>${notification.id || ""}</td>
+            <td>${notification.qr_id || ""}</td>
+            <td>${notification.car_number || "Not found"}</td>
+            <td>${notification.message || ""}</td>
+            <td>${notification.status || ""}</td>
+            <td>${date}</td>
         `;
 
 
         table.appendChild(row);
-
     });
-
 }
 
 
@@ -289,26 +232,16 @@ async function loadNotifications() {
 // AUTOMATIC OPERATOR PANEL REFRESH
 // ==========================================
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-        // If operator page
-        if (
-            document.getElementById(
-                "notificationTable"
-            )
-        ) {
+    if (document.getElementById("notificationTable")) {
 
-            loadNotifications();
+        loadNotifications();
 
-            // Refresh every 5 seconds
-            setInterval(
-                loadNotifications,
-                5000
-            );
-
-        }
-
+        setInterval(
+            loadNotifications,
+            5000
+        );
     }
-);
+
+});
