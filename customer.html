@@ -1,37 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Car Parking - Customer</title>
+async function notifyOffice() {
 
-    <link rel="stylesheet" href="style.css">
+    const qrId = document.getElementById("qrId").value.trim();
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-    <script src="script.js"></script>
-</head>
+    if (!qrId) {
+        alert("Please enter QR ID.");
+        return;
+    }
 
-<body>
+    try {
 
-<h1>🚗 Smart Car Parking</h1>
+        // Find the vehicle using QR_ID
+        const { data: vehicle, error: vehicleError } =
+            await db
+                .from("cars")
+                .select("QR_ID, CAR_NUMBER")
+                .eq("QR_ID", qrId)
+                .maybeSingle();
 
-<h2>Customer Panel</h2>
+        if (vehicleError) {
+            console.error("Vehicle lookup error:", vehicleError);
+            alert("Vehicle lookup failed: " + vehicleError.message);
+            return;
+        }
 
-<p>Enter the QR ID of the parked vehicle.</p>
+        if (!vehicle) {
+            alert("QR ID not found.");
+            return;
+        }
 
-<input
-    type="text"
-    id="qrID"
-    placeholder="Enter QR ID (Example: QR001)"
->
+        // Create notification
+        const { error: notificationError } =
+            await db
+                .from("notifications")
+                .insert({
+                    qr_id: vehicle.QR_ID,
+                    car_number: vehicle.CAR_NUMBER,
+                    message: "Customer has requested office assistance.",
+                    status: "NEW"
+                });
 
-<br><br>
+        if (notificationError) {
+            console.error(
+                "Notification insert error:",
+                notificationError
+            );
 
-<button onclick="notifyOffice()">
-    Notify Parking Office
-</button>
+            alert(
+                "Notification failed: " +
+                notificationError.message
+            );
 
-<p id="msg"></p>
+            return;
+        }
 
-</body>
-</html>
+        alert("✅ Office has been notified!");
+
+    } catch (error) {
+
+        console.error("Unexpected error:", error);
+
+        alert(
+            "Unexpected error: " +
+            error.message
+        );
+    }
+}
