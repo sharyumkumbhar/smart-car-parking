@@ -1,67 +1,725 @@
-async function notifyOffice() {
+<!DOCTYPE html>
+<html lang="en">
 
-    const qrId = document.getElementById("qrId").value.trim();
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Smart Parking - Notify Office</title>
+
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #1e3a8a
+                );
+
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+
+            box-shadow:
+                0 10px 30px
+                rgba(0, 0, 0, 0.25);
+
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            margin: 0;
+            color: #0f172a;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-top: 8px;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+
+            font-weight: bold;
+
+            margin-bottom: 7px;
+        }
+
+        input {
+            width: 100%;
+
+            padding: 14px;
+
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+
+            font-size: 17px;
+
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+        }
+
+        button {
+            width: 100%;
+
+            padding: 15px;
+
+            margin-top: 18px;
+
+            border: none;
+            border-radius: 9px;
+
+            background: #2563eb;
+            color: white;
+
+            font-size: 17px;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        button:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+
+            margin-top: 18px;
+
+            padding: 14px;
+
+            border-radius: 9px;
+
+            font-weight: bold;
+        }
+
+        .success {
+            display: block;
+
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .error {
+            display: block;
+
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .vehicle-info {
+            display: none;
+
+            text-align: left;
+
+            background: #f8fafc;
+
+            border-radius: 10px;
+
+            padding: 15px;
+
+            margin-top: 18px;
+        }
+
+        .vehicle-info p {
+            margin: 7px 0;
+        }
+
+        .footer {
+            margin-top: 20px;
+
+            color: #94a3b8;
+
+            font-size: 13px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="logo">
+            🚗
+        </div>
+
+        <h1>
+            Smart Parking
+        </h1>
+
+        <div class="subtitle">
+            Notify Parking Office
+        </div>
+
+
+        <!-- QR INPUT -->
+
+        <label for="qrId">
+            QR ID
+        </label>
+
+        <input
+            type="text"
+            id="qrId"
+            placeholder="Enter QR ID"
+            autocomplete="off"
+        >
+
+
+        <!-- VEHICLE INFORMATION -->
+
+        <div
+            id="vehicleInfo"
+            class="vehicle-info"
+        >
+
+            <p>
+                <strong>QR ID:</strong>
+                <span id="displayQR">-</span>
+            </p>
+
+            <p>
+                <strong>Car Number:</strong>
+                <span id="displayCar">-</span>
+            </p>
+
+        </div>
+
+
+        <!-- BUTTON -->
+
+        <button
+            type="button"
+            id="notifyButton"
+            onclick="notifyOffice()"
+        >
+            🔔 Notify Office
+        </button>
+
+
+        <!-- MESSAGE -->
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+
+        <div class="footer">
+            Your phone number is not displayed to the office.
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   SUPABASE CONFIGURATION
+   ========================================================= */
+
+/*
+   PUT YOUR EXISTING SUPABASE VALUES HERE.
+
+   Example:
+
+   const SUPABASE_URL =
+       "https://xxxxxxxx.supabase.co";
+
+   const SUPABASE_ANON_KEY =
+       "eyJhbGciOiJIUzI1NiIs...";
+*/
+
+const SUPABASE_URL =
+    "https://yokdshtjbjlhqmmrnpxh.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "sb_publishable_2ZDoGT6xIclKRzqbE78Vnw_Uwp7BRdK";
+
+
+/* =========================================================
+   CREATE SUPABASE CLIENT
+   ========================================================= */
+
+const db =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+/* =========================================================
+   GET ELEMENTS
+   ========================================================= */
+
+const qrInput =
+    document.getElementById(
+        "qrId"
+    );
+
+const notifyButton =
+    document.getElementById(
+        "notifyButton"
+    );
+
+const messageBox =
+    document.getElementById(
+        "message"
+    );
+
+const vehicleInfo =
+    document.getElementById(
+        "vehicleInfo"
+    );
+
+const displayQR =
+    document.getElementById(
+        "displayQR"
+    );
+
+const displayCar =
+    document.getElementById(
+        "displayCar"
+    );
+
+
+/* =========================================================
+   SHOW MESSAGE
+   ========================================================= */
+
+function showMessage(
+    text,
+    type
+) {
+
+    messageBox.textContent =
+        text;
+
+    messageBox.className =
+        "message " + type;
+
+}
+
+
+/* =========================================================
+   FIND VEHICLE
+   ========================================================= */
+
+async function findVehicle() {
+
+    const qrId =
+        qrInput.value.trim();
+
 
     if (!qrId) {
-        alert("Please enter QR ID.");
-        return;
+
+        vehicleInfo.style.display =
+            "none";
+
+        return null;
     }
+
 
     try {
 
-        // Find the vehicle using QR_ID
-        const { data: vehicle, error: vehicleError } =
-            await db
-                .from("cars")
-                .select("QR_ID, CAR_NUMBER")
-                .eq("QR_ID", qrId)
-                .maybeSingle();
+        const {
+            data,
+            error
+        } = await db
+
+            .from("cars")
+
+            .select(
+                "QR_ID,CAR_NUMBER"
+            )
+
+            .eq(
+                "QR_ID",
+                qrId
+            )
+
+            .maybeSingle();
+
+
+        if (error) {
+
+            console.error(
+                "Vehicle lookup error:",
+                error
+            );
+
+            showMessage(
+                "Database error: " +
+                error.message,
+                "error"
+            );
+
+            return null;
+        }
+
+
+        if (!data) {
+
+            vehicleInfo.style.display =
+                "none";
+
+            showMessage(
+                "❌ QR ID not found.",
+                "error"
+            );
+
+            return null;
+        }
+
+
+        /* DISPLAY VEHICLE */
+
+        displayQR.textContent =
+            data.QR_ID;
+
+        displayCar.textContent =
+            data.CAR_NUMBER;
+
+
+        vehicleInfo.style.display =
+            "block";
+
+
+        return data;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+        showMessage(
+            "Unexpected error: " +
+            error.message,
+            "error"
+        );
+
+        return null;
+    }
+
+}
+
+
+/* =========================================================
+   NOTIFY OFFICE
+   ========================================================= */
+
+async function notifyOffice() {
+
+    const qrId =
+        qrInput.value.trim();
+
+
+    /* VALIDATION */
+
+    if (!qrId) {
+
+        showMessage(
+            "Please enter your QR ID.",
+            "error"
+        );
+
+        qrInput.focus();
+
+        return;
+    }
+
+
+    /* DISABLE BUTTON */
+
+    notifyButton.disabled =
+        true;
+
+    notifyButton.textContent =
+        "Sending...";
+
+
+    try {
+
+        /* ================================================
+           STEP 1
+           FIND VEHICLE
+           ================================================ */
+
+        const {
+            data: vehicle,
+            error: vehicleError
+        } = await db
+
+            .from("cars")
+
+            .select(
+                "QR_ID,CAR_NUMBER"
+            )
+
+            .eq(
+                "QR_ID",
+                qrId
+            )
+
+            .maybeSingle();
+
 
         if (vehicleError) {
-            console.error("Vehicle lookup error:", vehicleError);
-            alert("Vehicle lookup failed: " + vehicleError.message);
+
+            console.error(
+                "Vehicle lookup error:",
+                vehicleError
+            );
+
+            showMessage(
+                "Vehicle lookup failed: " +
+                vehicleError.message,
+                "error"
+            );
+
             return;
         }
+
 
         if (!vehicle) {
-            alert("QR ID not found.");
+
+            showMessage(
+                "❌ QR ID not found. Please check the QR number.",
+                "error"
+            );
+
             return;
         }
 
-        // Create notification
-        const { error: notificationError } =
-            await db
-                .from("notifications")
-                .insert({
-                    qr_id: vehicle.QR_ID,
-                    car_number: vehicle.CAR_NUMBER,
-                    message: "Customer has requested office assistance.",
-                    status: "NEW"
-                });
+
+        /* ================================================
+           STEP 2
+           CREATE NOTIFICATION
+           ================================================ */
+
+        const notificationData = {
+
+            qr_id:
+                vehicle.QR_ID,
+
+            car_number:
+                vehicle.CAR_NUMBER,
+
+            message:
+                "Customer has requested assistance at the parking office.",
+
+            status:
+                "NEW"
+
+        };
+
+
+        console.log(
+            "Sending notification:",
+            notificationData
+        );
+
+
+        /* ================================================
+           STEP 3
+           INSERT INTO notifications
+           ================================================ */
+
+        const {
+            data: notification,
+            error: notificationError
+        } = await db
+
+            .from("notifications")
+
+            .insert([
+                notificationData
+            ])
+
+            .select();
+
 
         if (notificationError) {
+
             console.error(
                 "Notification insert error:",
                 notificationError
             );
 
-            alert(
-                "Notification failed: " +
-                notificationError.message
+            showMessage(
+                "❌ Notification failed: " +
+                notificationError.message,
+                "error"
             );
 
             return;
         }
 
-        alert("✅ Office has been notified!");
 
-    } catch (error) {
+        /* ================================================
+           SUCCESS
+           ================================================ */
 
-        console.error("Unexpected error:", error);
-
-        alert(
-            "Unexpected error: " +
-            error.message
+        console.log(
+            "Notification created:",
+            notification
         );
+
+
+        showMessage(
+            "✅ Office has been notified successfully!",
+            "success"
+        );
+
+
+        /* SHOW VEHICLE */
+
+        displayQR.textContent =
+            vehicle.QR_ID;
+
+        displayCar.textContent =
+            vehicle.CAR_NUMBER;
+
+        vehicleInfo.style.display =
+            "block";
+
+
     }
+
+    catch (error) {
+
+        console.error(
+            "Unexpected error:",
+            error
+        );
+
+        showMessage(
+            "Unexpected error: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+    finally {
+
+        notifyButton.disabled =
+            false;
+
+        notifyButton.textContent =
+            "🔔 Notify Office";
+
+    }
+
 }
+
+
+/* =========================================================
+   QR INPUT
+   ========================================================= */
+
+qrInput.addEventListener(
+    "input",
+    function() {
+
+        messageBox.style.display =
+            "none";
+
+        vehicleInfo.style.display =
+            "none";
+
+    }
+);
+
+
+/* =========================================================
+   ENTER KEY
+   ========================================================= */
+
+qrInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            notifyOffice();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   PAGE START
+   ========================================================= */
+
+console.log(
+    "Customer notification page loaded."
+);
+
+</script>
+
+</body>
+</html>
