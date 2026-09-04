@@ -1,132 +1,619 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Car Parking - Operator Dashboard</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f4f7;
+      margin: 0;
+      padding: 20px;
+    }
 
-<title>Smart Car Parking - Operator Panel</title>
+    h1, h2 {
+      text-align: center;
+    }
 
-<link rel="stylesheet" href="style.css">
+    .card {
+      background: white;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 1100px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px #ccc;
+    }
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
 
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+      margin-top: 5px;
+    }
+
+    button {
+      background: #16a34a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 9px;
+      text-align: center;
+    }
+
+    th {
+      background: #222;
+      color: white;
+    }
+
+    .timer {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .expired {
+      color: red;
+    }
+
+    .success {
+      color: green;
+      font-weight: bold;
+    }
+
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
 
-<header>
+<h1>🚗 Smart Car Parking</h1>
+<h2>Operator Dashboard</h2>
 
-    <h1>🚗 Smart Car Parking</h1>
+<!-- REGISTER VEHICLE -->
 
-    <p>Operator Dashboard</p>
+<div class="card">
 
-</header>
+  <h2>🚗 Register Vehicle</h2>
 
+  <div class="form-grid">
 
-<div class="container">
+    <div>
+      <label>QR ID</label>
+      <input id="qr_id" placeholder="QR001">
+    </div>
 
+    <div>
+      <label>Owner Name</label>
+      <input id="owner_name" placeholder="Owner Name">
+    </div>
 
-<!-- =====================================
-     VEHICLE REGISTRATION
-===================================== -->
+    <div>
+      <label>Car Number</label>
+      <input id="car_number" placeholder="GA01AB1234">
+    </div>
 
-<h2>🚘 Register Vehicle</h2>
+    <div>
+      <label>Phone Number</label>
+      <input id="phone_number" placeholder="+919876543210">
+    </div>
 
-<div class="registration-form">
+    <div>
+      <label>Parking Time</label>
+      <input id="parking_time" type="number" min="1"
+             placeholder="10">
+      <small>1 minute = 1 second in demo mode</small>
+    </div>
 
-    <label>QR ID</label>
-    <input
-        type="text"
-        id="QR_ID"
-        placeholder="Example: QR001"
-    >
+    <div>
+      <label>Slot Number</label>
+      <select id="slot_number">
+        <option value="1">Slot 1</option>
+        <option value="2">Slot 2</option>
+        <option value="3">Slot 3</option>
+        <option value="4">Slot 4</option>
+        <option value="5">Slot 5</option>
+      </select>
+    </div>
 
-    <label>Owner Name</label>
-    <input
-        type="text"
-        id="OWNER_NAME"
-        placeholder="Enter owner name"
-    >
+    <div>
+      <label>Status</label>
+      <select id="status">
+        <option value="OCCUPIED">OCCUPIED</option>
+        <option value="AVAILABLE">AVAILABLE</option>
+      </select>
+    </div>
 
-    <label>Car Number</label>
-    <input
-        type="text"
-        id="CAR_NUMBER"
-        placeholder="Example: GA07AB1234"
-    >
+  </div>
 
-    <label>Phone Number</label>
-    <input
-        type="text"
-        id="PHONE_NUMBER"
-        placeholder="Enter phone number"
-    >
+  <button onclick="registerVehicle()">
+    REGISTER VEHICLE
+  </button>
 
-    <label>Parking Time (minutes)</label>
-    <input
-        type="number"
-        id="PARKING_TIME"
-        placeholder="Example: 60"
-    >
-
-    <label>Status</label>
-    <select id="STATUS">
-
-        <option value="PARKED">PARKED</option>
-        <option value="NEW">NEW</option>
-        <option value="EXITED">EXITED</option>
-
-    </select>
-
-    <br><br>
-
-    <button onclick="registerVehicle()">
-        ➕ Register Vehicle
-    </button>
-
-    <p id="registrationMsg"></p>
+  <p id="message"></p>
 
 </div>
 
 
-<hr>
+<!-- REGISTERED VEHICLES -->
 
+<div class="card">
 
-<!-- =====================================
-     LIVE NOTIFICATIONS
-===================================== -->
+  <h2>🅿️ Registered Vehicles</h2>
 
-<h2>🔔 Live Notifications</h2>
+  <table>
 
-<table border="1" width="100%">
+    <thead>
+      <tr>
+        <th>QR ID</th>
+        <th>Car Number</th>
+        <th>Slot</th>
+        <th>Status</th>
+        <th>Remaining Time</th>
+      </tr>
+    </thead>
 
-<thead>
+    <tbody id="vehiclesTable"></tbody>
 
-<tr>
-
-<th>ID</th>
-<th>QR ID</th>
-<th>Car Number</th>
-<th>Message</th>
-<th>Status</th>
-<th>Time</th>
-
-</tr>
-
-</thead>
-
-<tbody id="notificationTable">
-
-</tbody>
-
-</table>
-
+  </table>
 
 </div>
 
 
-<script src="script.js"></script>
+<!-- LIVE NOTIFICATIONS -->
+
+<div class="card">
+
+  <h2>🔔 Live Notifications</h2>
+
+  <table>
+
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>QR ID</th>
+        <th>Car Number</th>
+        <th>Message</th>
+        <th>Status</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+
+    <tbody id="notificationsTable"></tbody>
+
+  </table>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+// =====================================
+// DATABASE CONNECTION
+// =====================================
+
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+
+// =====================================
+// REGISTER VEHICLE
+// =====================================
+
+async function registerVehicle() {
+
+  const qr_id =
+    document.getElementById("qr_id").value.trim();
+
+  const owner_name =
+    document.getElementById("owner_name").value.trim();
+
+  const car_number =
+    document.getElementById("car_number").value.trim();
+
+  const phone_number =
+    document.getElementById("phone_number").value.trim();
+
+  const parking_time =
+    parseInt(document.getElementById("parking_time").value);
+
+  const slot_number =
+    parseInt(document.getElementById("slot_number").value);
+
+  const status =
+    document.getElementById("status").value;
+
+
+  if (
+    !qr_id ||
+    !owner_name ||
+    !car_number ||
+    !phone_number ||
+    !parking_time
+  ) {
+
+    showMessage(
+      "Please fill all fields.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  // =================================
+  // DEMO TIMER
+  // 1 MINUTE = 1 SECOND
+  // =================================
+
+  const start = new Date();
+
+  const end = new Date(
+    start.getTime() + parking_time * 1000
+  );
+
+
+  // =================================
+  // INSERT VEHICLE
+  // =================================
+
+  const { data, error } = await db
+    .from("cars")
+    .insert([{
+
+      qr_id: qr_id,
+
+      owner_name: owner_name,
+
+      car_number: car_number,
+
+      phone_number: phone_number,
+
+      parking_time: parking_time,
+
+      slot_number: slot_number,
+
+      status: status,
+
+      parking_start: start.toISOString(),
+
+      parking_end: end.toISOString()
+
+    }])
+    .select();
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "ERROR: " + error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  showMessage(
+    "Vehicle registered successfully! ✅",
+    "success"
+  );
+
+
+  // Clear fields
+
+  document.getElementById("qr_id").value = "";
+  document.getElementById("owner_name").value = "";
+  document.getElementById("car_number").value = "";
+  document.getElementById("phone_number").value = "";
+  document.getElementById("parking_time").value = "";
+
+
+  loadVehicles();
+}
+
+
+// =====================================
+// MESSAGE
+// =====================================
+
+function showMessage(text, type) {
+
+  const msg =
+    document.getElementById("message");
+
+  msg.innerText = text;
+
+  msg.className = type;
+
+  setTimeout(() => {
+    msg.innerText = "";
+  }, 4000);
+}
+
+
+// =====================================
+// FORMAT TIMER
+// =====================================
+
+function formatTime(seconds) {
+
+  if (seconds < 0)
+    seconds = 0;
+
+  const minutes =
+    Math.floor(seconds / 60);
+
+  const secs =
+    Math.floor(seconds % 60);
+
+  return (
+    String(minutes).padStart(2, "0")
+    +
+    ":"
+    +
+    String(secs).padStart(2, "0")
+  );
+}
+
+
+// =====================================
+// LOAD VEHICLES
+// =====================================
+
+async function loadVehicles() {
+
+  const { data, error } = await db
+    .from("cars")
+    .select("*")
+    .order("id", { ascending: false });
+
+
+  if (error) {
+
+    console.error(error);
+
+    return;
+  }
+
+
+  const table =
+    document.getElementById("vehiclesTable");
+
+  table.innerHTML = "";
+
+
+  data.forEach(car => {
+
+    const row =
+      document.createElement("tr");
+
+
+    row.innerHTML = `
+
+      <td>${car.qr_id}</td>
+
+      <td>${car.car_number}</td>
+
+      <td>Slot ${car.slot_number || "-"}</td>
+
+      <td>${car.status}</td>
+
+      <td>
+
+        <span
+          class="timer"
+          id="timer-${car.id}">
+          Calculating...
+        </span>
+
+      </td>
+
+    `;
+
+
+    table.appendChild(row);
+
+  });
+
+
+  updateTimers(data);
+}
+
+
+// =====================================
+// UPDATE COUNTDOWN
+// =====================================
+
+async function updateTimers(cars) {
+
+  const now =
+    new Date();
+
+
+  for (const car of cars) {
+
+    const timer =
+      document.getElementById(
+        "timer-" + car.id
+      );
+
+
+    if (!timer)
+      continue;
+
+
+    if (
+      !car.parking_end ||
+      car.status !== "OCCUPIED"
+    ) {
+
+      timer.innerText = "--:--";
+
+      continue;
+    }
+
+
+    const end =
+      new Date(car.parking_end);
+
+
+    let remaining =
+      Math.ceil(
+        (end - now) / 1000
+      );
+
+
+    if (remaining <= 0) {
+
+      timer.innerText = "00:00";
+
+      timer.classList.add("expired");
+
+      continue;
+
+    }
+
+
+    timer.innerText =
+      formatTime(remaining);
+
+  }
+}
+
+
+// =====================================
+// LIVE COUNTDOWN
+// =====================================
+
+setInterval(async () => {
+
+  const { data, error } = await db
+    .from("cars")
+    .select("*");
+
+
+  if (error || !data)
+    return;
+
+
+  updateTimers(data);
+
+}, 1000);
+
+
+// =====================================
+// LIVE NOTIFICATIONS
+// =====================================
+
+async function loadNotifications() {
+
+  const { data, error } = await db
+    .from("notifications")
+    .select("*")
+    .order("created_at", {
+      ascending: false
+    });
+
+
+  if (error) {
+
+    console.error(error);
+
+    return;
+  }
+
+
+  const table =
+    document.getElementById(
+      "notificationsTable"
+    );
+
+  table.innerHTML = "";
+
+
+  data.forEach(notification => {
+
+    const row =
+      document.createElement("tr");
+
+
+    row.innerHTML = `
+
+      <td>${notification.id}</td>
+
+      <td>${notification.qr_id}</td>
+
+      <td>${notification.car_number || "-"}</td>
+
+      <td>${notification.message}</td>
+
+      <td>${notification.status}</td>
+
+      <td>
+        ${new Date(
+          notification.created_at
+        ).toLocaleTimeString()}
+      </td>
+
+    `;
+
+
+    table.appendChild(row);
+
+  });
+
+}
+
+
+// =====================================
+// START DASHBOARD
+// =====================================
+
+loadVehicles();
+
+loadNotifications();
+
+
+// Refresh notifications every 2 seconds
+
+setInterval(() => {
+
+  loadNotifications();
+
+}, 2000);
+
+</script>
 
 </body>
 </html>
