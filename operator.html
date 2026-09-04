@@ -1,328 +1,627 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Smart Car Parking - Operator Dashboard</title>
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f4f7;
-      margin: 0;
-      padding: 20px;
+
+    * {
+      box-sizing: border-box;
     }
 
-    h1, h2 {
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f2f4f7;
+      color: #222;
+    }
+
+    header {
+      background: #1f2937;
+      color: white;
+      padding: 20px;
       text-align: center;
+      border-radius: 10px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    header h1 {
+      margin: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
     }
 
     .card {
       background: white;
       padding: 20px;
-      margin: 20px auto;
-      max-width: 1100px;
+      margin-bottom: 20px;
       border-radius: 12px;
-      box-shadow: 0 2px 10px #ccc;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-top: 0;
     }
 
     .form-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 12px;
+      grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
     }
 
-    input, select, button {
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    input,
+    select {
       width: 100%;
-      padding: 10px;
-      box-sizing: border-box;
-      margin-top: 5px;
+      padding: 11px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
     }
 
     button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 7px;
       background: #16a34a;
       color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
+      font-size: 16px;
       font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #15803d;
+    }
+
+    .message {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      display: none;
+    }
+
+    .success {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .table-container {
+      overflow-x: auto;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 15px;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 9px;
-      text-align: center;
+      margin-top: 10px;
+      min-width: 700px;
     }
 
     th {
-      background: #222;
+      background: #1f2937;
       color: white;
+      padding: 10px;
+    }
+
+    td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
     }
 
     .timer {
-      font-weight: bold;
       font-size: 18px;
+      font-weight: bold;
     }
 
     .expired {
       color: red;
     }
 
-    .success {
+    .active {
       color: green;
-      font-weight: bold;
     }
 
-    .error {
-      color: red;
-      font-weight: bold;
+    small {
+      display: block;
+      margin-top: 5px;
+      color: #666;
     }
+
   </style>
 </head>
 
+
 <body>
 
-<h1>🚗 Smart Car Parking</h1>
-<h2>Operator Dashboard</h2>
+<header>
 
-<!-- REGISTER VEHICLE -->
+  <h1>🚗 Smart Car Parking</h1>
 
-<div class="card">
+  <p>Operator Dashboard</p>
 
-  <h2>🚗 Register Vehicle</h2>
+</header>
 
-  <div class="form-grid">
 
-    <div>
-      <label>QR ID</label>
-      <input id="qr_id" placeholder="QR001">
+<div class="container">
+
+
+  <!-- ================================= -->
+  <!-- REGISTER VEHICLE -->
+  <!-- ================================= -->
+
+  <div class="card">
+
+    <h2>🚗 Register Vehicle</h2>
+
+    <div class="form-grid">
+
+      <div>
+        <label for="qr_id">QR ID</label>
+
+        <input
+          type="text"
+          id="qr_id"
+          placeholder="QR001">
+      </div>
+
+
+      <div>
+        <label for="owner_name">Owner Name</label>
+
+        <input
+          type="text"
+          id="owner_name"
+          placeholder="Owner Name">
+      </div>
+
+
+      <div>
+        <label for="car_number">Car Number</label>
+
+        <input
+          type="text"
+          id="car_number"
+          placeholder="GA01AB1234">
+      </div>
+
+
+      <div>
+        <label for="phone_number">Phone Number</label>
+
+        <input
+          type="text"
+          id="phone_number"
+          placeholder="+919876543210">
+      </div>
+
+
+      <div>
+        <label for="parking_time">
+          Parking Time
+        </label>
+
+        <input
+          type="number"
+          id="parking_time"
+          min="1"
+          placeholder="10">
+
+        <small>
+          Demo: 1 minute = 1 second
+        </small>
+      </div>
+
+
+      <div>
+        <label for="slot_number">
+          Slot Number
+        </label>
+
+        <select id="slot_number">
+
+          <option value="1">Slot 1</option>
+          <option value="2">Slot 2</option>
+          <option value="3">Slot 3</option>
+          <option value="4">Slot 4</option>
+          <option value="5">Slot 5</option>
+
+        </select>
+      </div>
+
+
+      <div>
+        <label for="status">
+          Status
+        </label>
+
+        <select id="status">
+
+          <option value="OCCUPIED">
+            OCCUPIED
+          </option>
+
+          <option value="AVAILABLE">
+            AVAILABLE
+          </option>
+
+        </select>
+      </div>
+
     </div>
 
-    <div>
-      <label>Owner Name</label>
-      <input id="owner_name" placeholder="Owner Name">
-    </div>
 
-    <div>
-      <label>Car Number</label>
-      <input id="car_number" placeholder="GA01AB1234">
-    </div>
+    <button onclick="registerVehicle()">
+      REGISTER VEHICLE
+    </button>
 
-    <div>
-      <label>Phone Number</label>
-      <input id="phone_number" placeholder="+919876543210">
-    </div>
 
-    <div>
-      <label>Parking Time</label>
-      <input id="parking_time" type="number" min="1"
-             placeholder="10">
-      <small>1 minute = 1 second in demo mode</small>
-    </div>
-
-    <div>
-      <label>Slot Number</label>
-      <select id="slot_number">
-        <option value="1">Slot 1</option>
-        <option value="2">Slot 2</option>
-        <option value="3">Slot 3</option>
-        <option value="4">Slot 4</option>
-        <option value="5">Slot 5</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Status</label>
-      <select id="status">
-        <option value="OCCUPIED">OCCUPIED</option>
-        <option value="AVAILABLE">AVAILABLE</option>
-      </select>
+    <div
+      id="message"
+      class="message">
     </div>
 
   </div>
 
-  <button onclick="registerVehicle()">
-    REGISTER VEHICLE
-  </button>
 
-  <p id="message"></p>
+
+  <!-- ================================= -->
+  <!-- REGISTERED VEHICLES -->
+  <!-- ================================= -->
+
+  <div class="card">
+
+    <h2>🅿️ Registered Vehicles</h2>
+
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>QR ID</th>
+            <th>Owner</th>
+            <th>Car Number</th>
+            <th>Slot</th>
+            <th>Status</th>
+            <th>Remaining Time</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="vehiclesTable">
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ================================= -->
+  <!-- LIVE NOTIFICATIONS -->
+  <!-- ================================= -->
+
+  <div class="card">
+
+    <h2>🔔 Live Notifications</h2>
+
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>ID</th>
+            <th>QR ID</th>
+            <th>Car Number</th>
+            <th>Message</th>
+            <th>Status</th>
+            <th>Time</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="notificationsTable">
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
 
 </div>
 
 
-<!-- REGISTERED VEHICLES -->
 
-<div class="card">
+<!-- ================================= -->
+<!-- SUPABASE LIBRARY -->
+<!-- ================================= -->
 
-  <h2>🅿️ Registered Vehicles</h2>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
 
-  <table>
-
-    <thead>
-      <tr>
-        <th>QR ID</th>
-        <th>Car Number</th>
-        <th>Slot</th>
-        <th>Status</th>
-        <th>Remaining Time</th>
-      </tr>
-    </thead>
-
-    <tbody id="vehiclesTable"></tbody>
-
-  </table>
-
-</div>
-
-
-<!-- LIVE NOTIFICATIONS -->
-
-<div class="card">
-
-  <h2>🔔 Live Notifications</h2>
-
-  <table>
-
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>QR ID</th>
-        <th>Car Number</th>
-        <th>Message</th>
-        <th>Status</th>
-        <th>Time</th>
-      </tr>
-    </thead>
-
-    <tbody id="notificationsTable"></tbody>
-
-  </table>
-
-</div>
-
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
-// =====================================
+
+// =============================================
 // DATABASE CONNECTION
-// =====================================
+// =============================================
 
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+// COPY THESE TWO VALUES FROM YOUR EXISTING
+// WORKING SCRIPT.JS
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+const SUPABASE_URL =
+  "YOUR_SUPABASE_URL";
 
-
-// =====================================
-// REGISTER VEHICLE
-// =====================================
-
-async function registerVehicle() {
-
-  const qr_id =
-    document.getElementById("qr_id").value.trim();
-
-  const owner_name =
-    document.getElementById("owner_name").value.trim();
-
-  const car_number =
-    document.getElementById("car_number").value.trim();
-
-  const phone_number =
-    document.getElementById("phone_number").value.trim();
-
-  const parking_time =
-    parseInt(document.getElementById("parking_time").value);
-
-  const slot_number =
-    parseInt(document.getElementById("slot_number").value);
-
-  const status =
-    document.getElementById("status").value;
+const SUPABASE_ANON_KEY =
+  "YOUR_SUPABASE_ANON_KEY";
 
 
-  if (
-    !qr_id ||
-    !owner_name ||
-    !car_number ||
-    !phone_number ||
-    !parking_time
-  ) {
-
-    showMessage(
-      "Please fill all fields.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  // =================================
-  // DEMO TIMER
-  // 1 MINUTE = 1 SECOND
-  // =================================
-
-  const start = new Date();
-
-  const end = new Date(
-    start.getTime() + parking_time * 1000
+const db =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
   );
 
 
+
+// =============================================
+// SHOW MESSAGE
+// =============================================
+
+function showMessage(text, type) {
+
+  const message =
+    document.getElementById("message");
+
+  message.innerText = text;
+
+  message.className =
+    "message " + type;
+
+}
+
+
+
+// =============================================
+// REGISTER VEHICLE
+// =============================================
+
+async function registerVehicle() {
+
+  // Get values from form
+
+  const qr_id =
+    document.getElementById("qr_id")
+      .value.trim();
+
+
+  const owner_name =
+    document.getElementById("owner_name")
+      .value.trim();
+
+
+  const car_number =
+    document.getElementById("car_number")
+      .value.trim();
+
+
+  const phone_number =
+    document.getElementById("phone_number")
+      .value.trim();
+
+
+  const parking_time =
+    Number(
+      document.getElementById("parking_time")
+        .value
+    );
+
+
+  const slot_number =
+    Number(
+      document.getElementById("slot_number")
+        .value
+    );
+
+
+  const status =
+    document.getElementById("status")
+      .value;
+
+
+
   // =================================
-  // INSERT VEHICLE
+  // VALIDATE
   // =================================
 
-  const { data, error } = await db
-    .from("cars")
-    .insert([{
-
-      qr_id: qr_id,
-
-      owner_name: owner_name,
-
-      car_number: car_number,
-
-      phone_number: phone_number,
-
-      parking_time: parking_time,
-
-      slot_number: slot_number,
-
-      status: status,
-
-      parking_start: start.toISOString(),
-
-      parking_end: end.toISOString()
-
-    }])
-    .select();
-
-
-  if (error) {
-
-    console.error(error);
+  if (qr_id === "") {
 
     showMessage(
-      "ERROR: " + error.message,
+      "Please enter QR ID.",
       "error"
     );
 
     return;
   }
 
+
+  if (owner_name === "") {
+
+    showMessage(
+      "Please enter Owner Name.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if (car_number === "") {
+
+    showMessage(
+      "Please enter Car Number.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if (phone_number === "") {
+
+    showMessage(
+      "Please enter Phone Number.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if (
+    !Number.isFinite(parking_time) ||
+    parking_time <= 0
+  ) {
+
+    showMessage(
+      "Please enter a valid Parking Time.",
+      "error"
+    );
+
+    return;
+  }
+
+
+
+  // =================================
+  // CREATE PARKING TIMES
+  // =================================
+
+  const parking_start =
+    new Date();
+
+
+  // DEMO MODE
+  // 1 parking minute = 1 real second
+
+  const parking_end =
+    new Date(
+      parking_start.getTime()
+      +
+      parking_time * 1000
+    );
+
+
+
+  // =================================
+  // INSERT INTO CARS
+  // =================================
+
+  const { data, error } =
+    await db
+      .from("cars")
+      .insert({
+
+        qr_id:
+          qr_id,
+
+        owner_name:
+          owner_name,
+
+        car_number:
+          car_number,
+
+        phone_number:
+          phone_number,
+
+        parking_time:
+          parking_time,
+
+        slot_number:
+          slot_number,
+
+        status:
+          status,
+
+        parking_start:
+          parking_start.toISOString(),
+
+        parking_end:
+          parking_end.toISOString()
+
+      })
+      .select();
+
+
+
+  // =================================
+  // ERROR
+  // =================================
+
+  if (error) {
+
+    console.error(
+      "Registration Error:",
+      error
+    );
+
+
+    showMessage(
+      "Registration failed: "
+      +
+      error.message,
+      "error"
+    );
+
+
+    return;
+  }
+
+
+
+  // =================================
+  // SUCCESS
+  // =================================
 
   showMessage(
     "Vehicle registered successfully! ✅",
@@ -330,52 +629,53 @@ async function registerVehicle() {
   );
 
 
-  // Clear fields
+  // Clear form
 
-  document.getElementById("qr_id").value = "";
-  document.getElementById("owner_name").value = "";
-  document.getElementById("car_number").value = "";
-  document.getElementById("phone_number").value = "";
-  document.getElementById("parking_time").value = "";
+  document.getElementById("qr_id")
+    .value = "";
 
+  document.getElementById("owner_name")
+    .value = "";
+
+  document.getElementById("car_number")
+    .value = "";
+
+  document.getElementById("phone_number")
+    .value = "";
+
+  document.getElementById("parking_time")
+    .value = "";
+
+
+
+  // Reload vehicles
 
   loadVehicles();
+
 }
 
 
-// =====================================
-// MESSAGE
-// =====================================
 
-function showMessage(text, type) {
-
-  const msg =
-    document.getElementById("message");
-
-  msg.innerText = text;
-
-  msg.className = type;
-
-  setTimeout(() => {
-    msg.innerText = "";
-  }, 4000);
-}
-
-
-// =====================================
-// FORMAT TIMER
-// =====================================
+// =============================================
+// FORMAT TIME
+// =============================================
 
 function formatTime(seconds) {
 
-  if (seconds < 0)
+  if (seconds < 0) {
+
     seconds = 0;
+
+  }
+
 
   const minutes =
     Math.floor(seconds / 60);
 
+
   const secs =
     Math.floor(seconds % 60);
+
 
   return (
     String(minutes).padStart(2, "0")
@@ -384,33 +684,48 @@ function formatTime(seconds) {
     +
     String(secs).padStart(2, "0")
   );
+
 }
 
 
-// =====================================
+
+// =============================================
 // LOAD VEHICLES
-// =====================================
+// =============================================
 
 async function loadVehicles() {
 
-  const { data, error } = await db
-    .from("cars")
-    .select("*")
-    .order("id", { ascending: false });
+  const { data, error } =
+    await db
+      .from("cars")
+      .select("*")
+      .order(
+        "id",
+        {
+          ascending: false
+        }
+      );
 
 
   if (error) {
 
-    console.error(error);
+    console.error(
+      "Load vehicles error:",
+      error
+    );
 
     return;
   }
 
 
   const table =
-    document.getElementById("vehiclesTable");
+    document.getElementById(
+      "vehiclesTable"
+    );
+
 
   table.innerHTML = "";
+
 
 
   data.forEach(car => {
@@ -421,22 +736,32 @@ async function loadVehicles() {
 
     row.innerHTML = `
 
-      <td>${car.qr_id}</td>
-
-      <td>${car.car_number}</td>
-
-      <td>Slot ${car.slot_number || "-"}</td>
-
-      <td>${car.status}</td>
+      <td>
+        ${car.qr_id || "-"}
+      </td>
 
       <td>
+        ${car.owner_name || "-"}
+      </td>
 
+      <td>
+        ${car.car_number || "-"}
+      </td>
+
+      <td>
+        ${car.slot_number || "-"}
+      </td>
+
+      <td>
+        ${car.status || "-"}
+      </td>
+
+      <td>
         <span
           class="timer"
           id="timer-${car.id}">
-          Calculating...
+          --:--
         </span>
-
       </td>
 
     `;
@@ -448,20 +773,22 @@ async function loadVehicles() {
 
 
   updateTimers(data);
+
 }
 
 
-// =====================================
-// UPDATE COUNTDOWN
-// =====================================
 
-async function updateTimers(cars) {
+// =============================================
+// UPDATE TIMERS
+// =============================================
+
+function updateTimers(cars) {
 
   const now =
     new Date();
 
 
-  for (const car of cars) {
+  cars.forEach(car => {
 
     const timer =
       document.getElementById(
@@ -469,62 +796,104 @@ async function updateTimers(cars) {
       );
 
 
-    if (!timer)
-      continue;
+    if (!timer) {
 
+      return;
+
+    }
+
+
+
+    // Only occupied vehicles have timers
 
     if (
-      !car.parking_end ||
       car.status !== "OCCUPIED"
+      ||
+      !car.parking_end
     ) {
 
       timer.innerText = "--:--";
 
-      continue;
+      timer.classList.remove(
+        "expired"
+      );
+
+      return;
+
     }
 
 
+
     const end =
-      new Date(car.parking_end);
-
-
-    let remaining =
-      Math.ceil(
-        (end - now) / 1000
+      new Date(
+        car.parking_end
       );
+
+
+    const remaining =
+      Math.ceil(
+        (
+          end.getTime()
+          -
+          now.getTime()
+        )
+        /
+        1000
+      );
+
 
 
     if (remaining <= 0) {
 
-      timer.innerText = "00:00";
+      timer.innerText =
+        "00:00";
 
-      timer.classList.add("expired");
+      timer.classList.add(
+        "expired"
+      );
 
-      continue;
+    }
+    else {
+
+      timer.innerText =
+        formatTime(
+          remaining
+        );
+
+      timer.classList.remove(
+        "expired"
+      );
 
     }
 
+  });
 
-    timer.innerText =
-      formatTime(remaining);
-
-  }
 }
 
 
-// =====================================
-// LIVE COUNTDOWN
-// =====================================
+
+// =============================================
+// COUNTDOWN EVERY SECOND
+// =============================================
 
 setInterval(async () => {
 
-  const { data, error } = await db
-    .from("cars")
-    .select("*");
+  const { data, error } =
+    await db
+      .from("cars")
+      .select(
+        "id,status,parking_end"
+      );
 
 
-  if (error || !data)
+  if (
+    error ||
+    !data
+  ) {
+
     return;
+
+  }
 
 
   updateTimers(data);
@@ -532,25 +901,34 @@ setInterval(async () => {
 }, 1000);
 
 
-// =====================================
-// LIVE NOTIFICATIONS
-// =====================================
+
+// =============================================
+// LOAD NOTIFICATIONS
+// =============================================
 
 async function loadNotifications() {
 
-  const { data, error } = await db
-    .from("notifications")
-    .select("*")
-    .order("created_at", {
-      ascending: false
-    });
+  const { data, error } =
+    await db
+      .from("notifications")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
 
 
   if (error) {
 
-    console.error(error);
+    console.error(
+      "Notification error:",
+      error
+    );
 
     return;
+
   }
 
 
@@ -559,7 +937,9 @@ async function loadNotifications() {
       "notificationsTable"
     );
 
+
   table.innerHTML = "";
+
 
 
   data.forEach(notification => {
@@ -570,20 +950,36 @@ async function loadNotifications() {
 
     row.innerHTML = `
 
-      <td>${notification.id}</td>
-
-      <td>${notification.qr_id}</td>
-
-      <td>${notification.car_number || "-"}</td>
-
-      <td>${notification.message}</td>
-
-      <td>${notification.status}</td>
+      <td>
+        ${notification.id || "-"}
+      </td>
 
       <td>
-        ${new Date(
+        ${notification.qr_id || "-"}
+      </td>
+
+      <td>
+        ${notification.car_number || "-"}
+      </td>
+
+      <td>
+        ${notification.message || "-"}
+      </td>
+
+      <td>
+        ${notification.status || "-"}
+      </td>
+
+      <td>
+        ${
           notification.created_at
-        ).toLocaleTimeString()}
+          ?
+          new Date(
+            notification.created_at
+          ).toLocaleTimeString()
+          :
+          "-"
+        }
       </td>
 
     `;
@@ -596,22 +992,24 @@ async function loadNotifications() {
 }
 
 
-// =====================================
+
+// =============================================
 // START DASHBOARD
-// =====================================
+// =============================================
 
 loadVehicles();
 
 loadNotifications();
 
 
+
 // Refresh notifications every 2 seconds
 
-setInterval(() => {
+setInterval(
+  loadNotifications,
+  2000
+);
 
-  loadNotifications();
-
-}, 2000);
 
 </script>
 
