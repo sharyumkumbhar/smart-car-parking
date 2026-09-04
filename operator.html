@@ -986,12 +986,12 @@ async function loadVehicles() {
                     ?
                     `
 
-                    <button
-                        class="sms-btn"
-                        onclick='createExpiryCommand(${JSON.stringify(vehicle)})'
-                    >
-                        📱 Create Expiry SMS
-                    </button>
+                   ${vehicle.STATUS === "OCCUPIED" ? `
+<button onclick='createExpirySMSCommand(${JSON.stringify(vehicle)})'>
+  📱 Create Expiry SMS
+</button>
+` : ""}
+
 
                     <button
                         class="release-btn"
