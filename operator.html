@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Smart Parking - Operator Dashboard</title>
+  <title>Smart Parking Operator Dashboard</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -17,8 +17,8 @@
 
     body {
       margin: 0;
-      background: #f2f4f7;
-      color: #222;
+      background: #f1f5f9;
+      color: #1e293b;
     }
 
     header {
@@ -34,7 +34,7 @@
     }
 
     header p {
-      margin: 6px 0 0;
+      margin: 7px 0 0;
       color: #cbd5e1;
     }
 
@@ -46,9 +46,9 @@
 
     .card {
       background: white;
-      border-radius: 14px;
       padding: 20px;
       margin-bottom: 20px;
+      border-radius: 14px;
       box-shadow: 0 3px 12px rgba(0,0,0,0.08);
     }
 
@@ -63,8 +63,8 @@
     }
 
     label {
-      font-weight: bold;
       display: block;
+      font-weight: bold;
       margin-bottom: 6px;
     }
 
@@ -78,11 +78,11 @@
     }
 
     .register-btn {
-      margin-top: 18px;
       width: 100%;
+      margin-top: 18px;
       padding: 13px;
       border: none;
-      border-radius: 9px;
+      border-radius: 8px;
       background: #16a34a;
       color: white;
       font-size: 17px;
@@ -94,30 +94,52 @@
       background: #15803d;
     }
 
+    .register-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
     .message {
+      display: none;
       margin-top: 15px;
       padding: 12px;
       border-radius: 8px;
-      display: none;
       font-weight: bold;
     }
 
-    .success {
+    .message.success {
       display: block;
       background: #dcfce7;
       color: #166534;
     }
 
-    .error {
+    .message.error {
       display: block;
       background: #fee2e2;
       color: #991b1b;
     }
 
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .refresh-btn {
+      border: none;
+      padding: 9px 15px;
+      border-radius: 7px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
     .vehicle {
       border: 1px solid #d1d5db;
-      border-radius: 10px;
       padding: 15px;
+      border-radius: 10px;
       margin-bottom: 12px;
       background: #fafafa;
     }
@@ -125,8 +147,8 @@
     .vehicle-header {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
       align-items: center;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
@@ -141,46 +163,24 @@
       font-weight: bold;
     }
 
-    .occupied {
+    .status-occupied {
       background: #fee2e2;
       color: #991b1b;
     }
 
-    .available {
+    .status-available {
       background: #dcfce7;
       color: #166534;
-    }
-
-    .expired {
-      background: #fef3c7;
-      color: #92400e;
     }
 
     .countdown {
       font-size: 20px;
       font-weight: bold;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
-    .notification {
-      border-left: 5px solid #2563eb;
-      background: #eff6ff;
-      padding: 12px;
-      margin-bottom: 10px;
-      border-radius: 7px;
-    }
-
-    .notification small {
-      color: #64748b;
-    }
-
-    .refresh-btn {
-      padding: 9px 15px;
-      border: none;
-      border-radius: 7px;
-      background: #2563eb;
-      color: white;
-      cursor: pointer;
+    .expired {
+      color: #b45309;
     }
 
     .release-btn {
@@ -197,9 +197,21 @@
       background: #b91c1c;
     }
 
-    .empty {
+    .notification {
+      background: #eff6ff;
+      border-left: 5px solid #2563eb;
+      padding: 12px;
+      border-radius: 7px;
+      margin-bottom: 10px;
+    }
+
+    .notification small {
       color: #64748b;
+    }
+
+    .empty {
       text-align: center;
+      color: #64748b;
       padding: 15px;
     }
 
@@ -215,12 +227,13 @@
 
 <header>
   <h1>🚗 Smart Parking Operator Dashboard</h1>
-  <p>Vehicle Registration • Live Notifications • Parking Status</p>
+  <p>Vehicle Registration • Live Notifications • Parking Management</p>
 </header>
 
 <div class="container">
 
-  <!-- VEHICLE REGISTRATION -->
+  <!-- ================= VEHICLE REGISTRATION ================= -->
+
   <div class="card">
 
     <h2>🚗 Register Vehicle</h2>
@@ -259,12 +272,15 @@
         <input
           type="text"
           id="phone_number"
-          placeholder="Example: +919876543210"
+          placeholder="+919876543210"
         >
       </div>
 
       <div>
-        <label for="parking_time">Parking Time</label>
+        <label for="parking_time">
+          Parking Time
+        </label>
+
         <input
           type="number"
           id="parking_time"
@@ -274,28 +290,53 @@
       </div>
 
       <div>
-        <label for="slot_number">Parking Slot</label>
+        <label for="slot_number">
+          Parking Slot
+        </label>
 
         <select id="slot_number">
 
-          <option value="">Select Slot</option>
+          <option value="">
+            Select Slot
+          </option>
 
-          <option value="1">Slot 1</option>
-          <option value="2">Slot 2</option>
-          <option value="3">Slot 3</option>
-          <option value="4">Slot 4</option>
-          <option value="5">Slot 5</option>
+          <option value="1">
+            Slot 1
+          </option>
+
+          <option value="2">
+            Slot 2
+          </option>
+
+          <option value="3">
+            Slot 3
+          </option>
+
+          <option value="4">
+            Slot 4
+          </option>
+
+          <option value="5">
+            Slot 5
+          </option>
 
         </select>
       </div>
 
       <div>
-        <label for="status">Status</label>
+        <label for="status">
+          Status
+        </label>
 
         <select id="status">
 
-          <option value="OCCUPIED">OCCUPIED</option>
-          <option value="AVAILABLE">AVAILABLE</option>
+          <option value="OCCUPIED">
+            OCCUPIED
+          </option>
+
+          <option value="AVAILABLE">
+            AVAILABLE
+          </option>
 
         </select>
 
@@ -312,16 +353,19 @@
       🚗 Register Vehicle
     </button>
 
-    <div id="message" class="message"></div>
+    <div
+      id="message"
+      class="message"
+    ></div>
 
   </div>
 
 
-  <!-- LIVE NOTIFICATIONS -->
+  <!-- ================= LIVE NOTIFICATIONS ================= -->
 
   <div class="card">
 
-    <div class="vehicle-header">
+    <div class="section-header">
 
       <h2>🔔 Live Notifications</h2>
 
@@ -335,21 +379,19 @@
     </div>
 
     <div id="notifications">
-
       <div class="empty">
         Loading notifications...
       </div>
-
     </div>
 
   </div>
 
 
-  <!-- REGISTERED VEHICLES -->
+  <!-- ================= REGISTERED VEHICLES ================= -->
 
   <div class="card">
 
-    <div class="vehicle-header">
+    <div class="section-header">
 
       <h2>🚘 Registered Vehicles</h2>
 
@@ -363,11 +405,9 @@
     </div>
 
     <div id="vehicles">
-
       <div class="empty">
         Loading vehicles...
       </div>
-
     </div>
 
   </div>
@@ -378,17 +418,20 @@
 <script>
 
 /* =========================================================
-   SUPABASE CONNECTION
+   SUPABASE
    ========================================================= */
 
-const SUPABASE_URL = "https://yokdshtjbjlhqmmrnpxh.supabase.co";
+const SUPABASE_URL =
+  "YOUR_SUPABASE_URL";
 
-const SUPABASE_ANON_KEY = "sb_publishable_2ZDoGT6xIclKRzqbE78Vnw_Uwp7BRdK";
+const SUPABASE_ANON_KEY =
+  "YOUR_SUPABASE_ANON_KEY";
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+const db =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
 
 
 /* =========================================================
@@ -397,11 +440,13 @@ const db = window.supabase.createClient(
 
 function showMessage(text, type) {
 
-  const message = document.getElementById("message");
+  const message =
+    document.getElementById("message");
 
   message.textContent = text;
 
-  message.className = "message " + type;
+  message.className =
+    "message " + type;
 
 }
 
@@ -412,139 +457,175 @@ function showMessage(text, type) {
 
 async function registerVehicle() {
 
+  const button =
+    document.getElementById(
+      "registerButton"
+    );
+
   try {
 
+    /* GET FORM VALUES */
+
     const qr_id =
-      document.getElementById("qr_id").value.trim();
+      document.getElementById(
+        "qr_id"
+      ).value.trim();
 
     const owner_name =
-      document.getElementById("owner_name").value.trim();
+      document.getElementById(
+        "owner_name"
+      ).value.trim();
 
     const car_number =
-      document.getElementById("car_number").value.trim();
+      document.getElementById(
+        "car_number"
+      ).value.trim();
 
     const phone_number =
-      document.getElementById("phone_number").value.trim();
+      document.getElementById(
+        "phone_number"
+      ).value.trim();
 
     const parking_time =
-      Number(document.getElementById("parking_time").value);
+      Number(
+        document.getElementById(
+          "parking_time"
+        ).value
+      );
 
     const slot_number =
-      Number(document.getElementById("slot_number").value);
+      Number(
+        document.getElementById(
+          "slot_number"
+        ).value
+      );
 
     const status =
-      document.getElementById("status").value;
+      document.getElementById(
+        "status"
+      ).value;
 
 
     /* VALIDATION */
 
     if (!qr_id) {
 
-      showMessage("Please enter QR ID.", "error");
+      showMessage(
+        "Please enter QR ID.",
+        "error"
+      );
 
       return;
-
     }
-
 
     if (!owner_name) {
 
-      showMessage("Please enter owner name.", "error");
+      showMessage(
+        "Please enter owner name.",
+        "error"
+      );
 
       return;
-
     }
-
 
     if (!car_number) {
 
-      showMessage("Please enter car number.", "error");
+      showMessage(
+        "Please enter car number.",
+        "error"
+      );
 
       return;
-
     }
-
 
     if (!phone_number) {
 
-      showMessage("Please enter phone number.", "error");
+      showMessage(
+        "Please enter phone number.",
+        "error"
+      );
 
       return;
+    }
 
+    if (
+      !parking_time ||
+      parking_time <= 0
+    ) {
+
+      showMessage(
+        "Please enter a valid parking time.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (
+      !slot_number ||
+      slot_number < 1 ||
+      slot_number > 5
+    ) {
+
+      showMessage(
+        "Please select Slot 1 to Slot 5.",
+        "error"
+      );
+
+      return;
     }
 
 
-    if (!parking_time || parking_time <= 0) {
-
-      showMessage("Please enter a valid parking time.", "error");
-
-      return;
-
-    }
-
-
-    if (!slot_number || slot_number < 1 || slot_number > 5) {
-
-      showMessage("Please select a parking slot.", "error");
-
-      return;
-
-    }
-
-
-    /* BUTTON */
-
-    const button =
-      document.getElementById("registerButton");
+    /* DISABLE BUTTON */
 
     button.disabled = true;
 
-    button.textContent = "Registering...";
+    button.textContent =
+      "Registering...";
 
 
     /* =====================================================
-       CHECK DUPLICATE QR
+       CHECK QR ID
        ===================================================== */
 
-    const { data: existingQR, error: qrError } =
-      await db
-        .from("cars")
-        .select("QR_ID")
-        .eq("QR_ID", qr_id)
-        .limit(1);
+    const {
+      data: existingQR,
+      error: qrError
+    } = await db
+      .from("cars")
+      .select("QR_ID")
+      .eq("QR_ID", qr_id)
+      .limit(1);
 
 
     if (qrError) {
 
-      console.error(qrError);
+      console.error(
+        "QR CHECK ERROR:",
+        qrError
+      );
 
       showMessage(
-        "QR check failed: " + qrError.message,
+        "QR check failed: " +
+        qrError.message,
         "error"
       );
 
-      button.disabled = false;
-
-      button.textContent = "🚗 Register Vehicle";
-
       return;
-
     }
 
 
-    if (existingQR && existingQR.length > 0) {
+    if (
+      existingQR &&
+      existingQR.length > 0
+    ) {
 
       showMessage(
         "This QR ID is already registered.",
         "error"
       );
 
-      button.disabled = false;
-
-      button.textContent = "🚗 Register Vehicle";
-
       return;
-
     }
 
 
@@ -552,69 +633,80 @@ async function registerVehicle() {
        CHECK SLOT
        ===================================================== */
 
-    const { data: existingSlot, error: slotError } =
-      await db
-        .from("cars")
-        .select("QR_ID,CAR_NUMBER")
-        .eq("SLOT_NUMBER", slot_number)
-        .eq("STATUS", "OCCUPIED")
-        .limit(1);
+    const {
+      data: existingSlot,
+      error: slotError
+    } = await db
+      .from("cars")
+      .select(
+        "QR_ID,CAR_NUMBER"
+      )
+      .eq(
+        "SLOT_NUMBER",
+        slot_number
+      )
+      .eq(
+        "STATUS",
+        "OCCUPIED"
+      )
+      .limit(1);
 
 
     if (slotError) {
 
-      console.error(slotError);
+      console.error(
+        "SLOT CHECK ERROR:",
+        slotError
+      );
 
       showMessage(
-        "Slot check failed: " + slotError.message,
+        "Slot check failed: " +
+        slotError.message,
         "error"
       );
 
-      button.disabled = false;
-
-      button.textContent = "🚗 Register Vehicle";
-
       return;
-
     }
 
 
-    if (existingSlot && existingSlot.length > 0) {
+    if (
+      existingSlot &&
+      existingSlot.length > 0
+    ) {
 
       showMessage(
-        "Slot " + slot_number + " is already occupied.",
+        "Slot " +
+        slot_number +
+        " is already occupied.",
         "error"
       );
 
-      button.disabled = false;
-
-      button.textContent = "🚗 Register Vehicle";
-
       return;
-
     }
 
 
     /* =====================================================
-       PARKING TIME
-       
+       PARKING TIMER
+
        Exhibition mode:
        1 minute = 1 second
-       
-       Therefore:
-       parking_time * 1000
        ===================================================== */
 
-    const parking_start = new Date();
+    const parking_start =
+      new Date();
 
-    const parking_end = new Date(
-      parking_start.getTime() +
-      parking_time * 1000
-    );
+
+    const parking_end =
+      new Date(
+        parking_start.getTime() +
+        parking_time * 1000
+      );
 
 
     /* =====================================================
-       DATA TO DATABASE
+       DATABASE OBJECT
+
+       EXACT COLUMN NAMES
        ===================================================== */
 
     const vehicleData = {
@@ -631,6 +723,8 @@ async function registerVehicle() {
 
       STATUS: status,
 
+      PARK: "YES",
+
       SLOT_NUMBER: slot_number,
 
       parking_start:
@@ -643,7 +737,7 @@ async function registerVehicle() {
 
 
     console.log(
-      "Sending vehicle data:",
+      "Vehicle data:",
       vehicleData
     );
 
@@ -652,32 +746,29 @@ async function registerVehicle() {
        INSERT
        ===================================================== */
 
-    const { data, error } =
-      await db
-        .from("cars")
-        .insert([vehicleData])
-        .select();
+    const {
+      error: insertError
+    } = await db
+      .from("cars")
+      .insert([
+        vehicleData
+      ]);
 
 
-    if (error) {
+    if (insertError) {
 
       console.error(
-        "DATABASE INSERT ERROR:",
-        error
+        "INSERT ERROR:",
+        insertError
       );
 
       showMessage(
         "Registration failed: " +
-        error.message,
+        insertError.message,
         "error"
       );
 
-      button.disabled = false;
-
-      button.textContent = "🚗 Register Vehicle";
-
       return;
-
     }
 
 
@@ -693,28 +784,34 @@ async function registerVehicle() {
 
     /* CLEAR FORM */
 
-    document.getElementById("qr_id").value = "";
+    document.getElementById(
+      "qr_id"
+    ).value = "";
 
-    document.getElementById("owner_name").value = "";
+    document.getElementById(
+      "owner_name"
+    ).value = "";
 
-    document.getElementById("car_number").value = "";
+    document.getElementById(
+      "car_number"
+    ).value = "";
 
-    document.getElementById("phone_number").value = "";
+    document.getElementById(
+      "phone_number"
+    ).value = "";
 
-    document.getElementById("parking_time").value = "";
+    document.getElementById(
+      "parking_time"
+    ).value = "";
 
-    document.getElementById("slot_number").value = "";
+    document.getElementById(
+      "slot_number"
+    ).value = "";
 
-    document.getElementById("status").value =
-      "OCCUPIED";
+    document.getElementById(
+      "status"
+    ).value = "OCCUPIED";
 
-
-    button.disabled = false;
-
-    button.textContent = "🚗 Register Vehicle";
-
-
-    /* REFRESH VEHICLES */
 
     loadVehicles();
 
@@ -723,21 +820,24 @@ async function registerVehicle() {
   catch (error) {
 
     console.error(
-      "Unexpected error:",
+      "UNEXPECTED ERROR:",
       error
     );
 
     showMessage(
-      "Unexpected error: " + error.message,
+      "Unexpected error: " +
+      error.message,
       "error"
     );
 
-    const button =
-      document.getElementById("registerButton");
+  }
+
+  finally {
 
     button.disabled = false;
 
-    button.textContent = "🚗 Register Vehicle";
+    button.textContent =
+      "🚗 Register Vehicle";
 
   }
 
@@ -745,153 +845,200 @@ async function registerVehicle() {
 
 
 /* =========================================================
-   LOAD REGISTERED VEHICLES
+   LOAD VEHICLES
    ========================================================= */
 
 async function loadVehicles() {
 
   const container =
-    document.getElementById("vehicles");
+    document.getElementById(
+      "vehicles"
+    );
 
   container.innerHTML =
     '<div class="empty">Loading...</div>';
 
 
-  const { data, error } =
-    await db
-      .from("cars")
-      .select(
-        "QR_ID,OWNER_NAME,CAR_NUMBER,PHONE_NUMBER,PARKING_TIME,STATUS,SLOT_NUMBER,parking_start,parking_end"
-      )
-      .order(
-        "parking_start",
-        { ascending: false }
-      );
+  const {
+    data,
+    error
+  } = await db
+    .from("cars")
+    .select(
+      "QR_ID,OWNER_NAME,CAR_NUMBER,PHONE_NUMBER,PARKING_TIME,STATUS,PARK,SLOT_NUMBER,parking_start,parking_end"
+    )
+    .order(
+      "parking_start",
+      {
+        ascending: false
+      }
+    );
 
 
   if (error) {
 
-    console.error(error);
+    console.error(
+      "LOAD VEHICLES ERROR:",
+      error
+    );
 
     container.innerHTML =
-      '<div class="empty">Failed to load vehicles.</div>';
+      '<div class="empty">Failed to load vehicles:<br>' +
+      escapeHTML(error.message) +
+      '</div>';
 
     return;
-
   }
 
 
-  if (!data || data.length === 0) {
+  if (
+    !data ||
+    data.length === 0
+  ) {
 
     container.innerHTML =
       '<div class="empty">No vehicles registered.</div>';
 
     return;
-
   }
 
 
   container.innerHTML = "";
 
 
-  data.forEach(vehicle => {
+  data.forEach(
+    vehicle => {
 
-    const div =
-      document.createElement("div");
+      const div =
+        document.createElement(
+          "div"
+        );
 
-    div.className = "vehicle";
-
-
-    div.innerHTML = `
-
-      <div class="vehicle-header">
-
-        <h3>
-          🚗 ${escapeHTML(vehicle.CAR_NUMBER || "Unknown")}
-        </h3>
-
-        <span class="status ${
-          vehicle.STATUS === "OCCUPIED"
-            ? "occupied"
-            : "available"
-        }">
-
-          ${escapeHTML(vehicle.STATUS || "")}
-
-        </span>
-
-      </div>
+      div.className =
+        "vehicle";
 
 
-      <p>
-        <b>QR ID:</b>
-        ${escapeHTML(vehicle.QR_ID || "")}
-      </p>
-
-
-      <p>
-        <b>Owner:</b>
-        ${escapeHTML(vehicle.OWNER_NAME || "")}
-      </p>
-
-
-      <p>
-        <b>Phone:</b>
-        ${escapeHTML(vehicle.PHONE_NUMBER || "")}
-      </p>
-
-
-      <p>
-        <b>Slot:</b>
-        ${escapeHTML(String(vehicle.SLOT_NUMBER || ""))}
-      </p>
-
-
-      <p>
-        <b>Parking Time:</b>
-        ${escapeHTML(String(vehicle.PARKING_TIME || ""))}
-        minutes
-      </p>
-
-
-      <div
-        class="countdown"
-        id="timer-${escapeHTML(vehicle.QR_ID)}"
-      >
-        Calculating...
-      </div>
-
-
-      ${
+      const statusClass =
         vehicle.STATUS === "OCCUPIED"
-        ?
-        `
-        <button
-          class="release-btn"
-          onclick="releaseVehicle('${escapeJS(vehicle.QR_ID)}')"
+          ? "status-occupied"
+          : "status-available";
+
+
+      div.innerHTML = `
+
+        <div class="vehicle-header">
+
+          <h3>
+            🚗
+            ${escapeHTML(
+              vehicle.CAR_NUMBER
+            )}
+          </h3>
+
+          <span class="status ${statusClass}">
+            ${escapeHTML(
+              vehicle.STATUS
+            )}
+          </span>
+
+        </div>
+
+
+        <p>
+          <b>QR ID:</b>
+          ${escapeHTML(
+            vehicle.QR_ID
+          )}
+        </p>
+
+
+        <p>
+          <b>Owner:</b>
+          ${escapeHTML(
+            vehicle.OWNER_NAME
+          )}
+        </p>
+
+
+        <p>
+          <b>Phone:</b>
+          ${escapeHTML(
+            vehicle.PHONE_NUMBER
+          )}
+        </p>
+
+
+        <p>
+          <b>Slot:</b>
+          ${escapeHTML(
+            String(
+              vehicle.SLOT_NUMBER
+            )
+          )}
+        </p>
+
+
+        <p>
+          <b>Parking Time:</b>
+          ${escapeHTML(
+            String(
+              vehicle.PARKING_TIME
+            )
+          )}
+          minutes
+        </p>
+
+
+        <p>
+          <b>Park:</b>
+          ${escapeHTML(
+            String(
+              vehicle.PARK
+            )
+          )}
+        </p>
+
+
+        <div
+          class="countdown"
+          id="timer-${escapeHTML(
+            vehicle.QR_ID
+          )}"
         >
-          🚪 Release Vehicle
-        </button>
-        `
-        :
-        ""
-      }
-
-    `;
+          Calculating...
+        </div>
 
 
-    container.appendChild(div);
+        ${
+          vehicle.STATUS === "OCCUPIED"
+          ? `
+            <button
+              class="release-btn"
+              onclick="releaseVehicle('${escapeJS(
+                vehicle.QR_ID
+              )}')"
+            >
+              🚪 Release Vehicle
+            </button>
+          `
+          : ""
+        }
+
+      `;
 
 
-    updateCountdown(
+      container.appendChild(
+        div
+      );
 
-      vehicle.QR_ID,
 
-      vehicle.parking_end
+      updateCountdown(
+        vehicle.QR_ID,
+        vehicle.parking_end
+      );
 
-    );
-
-  });
+    }
+  );
 
 }
 
@@ -900,7 +1047,10 @@ async function loadVehicles() {
    COUNTDOWN
    ========================================================= */
 
-function updateCountdown(qr_id, parking_end) {
+function updateCountdown(
+  qr_id,
+  parking_end
+) {
 
   const timer =
     document.getElementById(
@@ -919,15 +1069,18 @@ function updateCountdown(qr_id, parking_end) {
         "No parking time";
 
       return;
-
     }
 
 
     const end =
-      new Date(parking_end).getTime();
+      new Date(
+        parking_end
+      ).getTime();
+
 
     const now =
-      new Date().getTime();
+      Date.now();
+
 
     const difference =
       end - now;
@@ -942,27 +1095,30 @@ function updateCountdown(qr_id, parking_end) {
         "countdown expired";
 
       return;
-
     }
 
 
-    const seconds =
-      Math.floor(difference / 1000);
+    const totalSeconds =
+      Math.floor(
+        difference / 1000
+      );
 
 
     const minutes =
-      Math.floor(seconds / 60);
+      Math.floor(
+        totalSeconds / 60
+      );
 
 
-    const remainingSeconds =
-      seconds % 60;
+    const seconds =
+      totalSeconds % 60;
 
 
     timer.textContent =
       "⏳ Remaining: " +
       minutes +
       "m " +
-      remainingSeconds +
+      seconds +
       "s";
 
   }
@@ -983,44 +1139,51 @@ function updateCountdown(qr_id, parking_end) {
    RELEASE VEHICLE
    ========================================================= */
 
-async function releaseVehicle(qr_id) {
+async function releaseVehicle(
+  qr_id
+) {
 
-  if (
-    !confirm(
+  const confirmed =
+    confirm(
       "Release this vehicle?"
-    )
-  ) {
+    );
 
+
+  if (!confirmed) {
     return;
-
   }
 
 
-  const { error } =
-    await db
-      .from("cars")
-      .update({
+  const {
+    error
+  } = await db
+    .from("cars")
+    .update({
 
-        STATUS: "AVAILABLE"
+      STATUS: "AVAILABLE",
 
-      })
-      .eq(
-        "QR_ID",
-        qr_id
-      );
+      PARK: "NO"
+
+    })
+    .eq(
+      "QR_ID",
+      qr_id
+    );
 
 
   if (error) {
 
-    console.error(error);
+    console.error(
+      "RELEASE ERROR:",
+      error
+    );
 
     alert(
-      "Failed to release vehicle: " +
+      "Failed to release vehicle:\n" +
       error.message
     );
 
     return;
-
   }
 
 
@@ -1050,131 +1213,168 @@ async function loadNotifications() {
     '<div class="empty">Loading...</div>';
 
 
-  const { data, error } =
-    await db
-      .from("notifications")
-      .select(
-        "id,qr_id,car_number,message,status,created_at"
-      )
-      .order(
-        "created_at",
-        { ascending: false }
-      )
-      .limit(30);
+  const {
+    data,
+    error
+  } = await db
+    .from("notifications")
+    .select(
+      "id,qr_id,car_number,message,status,created_at"
+    )
+    .order(
+      "created_at",
+      {
+        ascending: false
+      }
+    )
+    .limit(30);
 
 
   if (error) {
 
-    console.error(error);
+    console.error(
+      "NOTIFICATION ERROR:",
+      error
+    );
 
     container.innerHTML =
       '<div class="empty">Failed to load notifications.</div>';
 
     return;
-
   }
 
 
-  if (!data || data.length === 0) {
+  if (
+    !data ||
+    data.length === 0
+  ) {
 
     container.innerHTML =
       '<div class="empty">No notifications yet.</div>';
 
     return;
-
   }
 
 
   container.innerHTML = "";
 
 
-  data.forEach(notification => {
+  data.forEach(
+    notification => {
 
-    const div =
-      document.createElement("div");
+      const div =
+        document.createElement(
+          "div"
+        );
 
-    div.className =
-      "notification";
-
-
-    div.innerHTML = `
-
-      <b>🔔 QR ID:</b>
-      ${escapeHTML(notification.qr_id || "")}
-
-      <br>
-
-      <b>🚗 Car:</b>
-      ${escapeHTML(notification.car_number || "")}
-
-      <br><br>
-
-      ${escapeHTML(notification.message || "")}
-
-      <br><br>
-
-      <small>
-        ${formatDate(notification.created_at)}
-      </small>
-
-    `;
+      div.className =
+        "notification";
 
 
-    container.appendChild(div);
+      div.innerHTML = `
 
-  });
+        <b>🔔 QR ID:</b>
+        ${escapeHTML(
+          notification.qr_id
+        )}
+
+        <br>
+
+        <b>🚗 Car:</b>
+        ${escapeHTML(
+          notification.car_number
+        )}
+
+        <br><br>
+
+        ${escapeHTML(
+          notification.message
+        )}
+
+        <br><br>
+
+        <small>
+          ${formatDate(
+            notification.created_at
+          )}
+        </small>
+
+      `;
+
+
+      container.appendChild(
+        div
+      );
+
+    }
+  );
 
 }
 
 
 /* =========================================================
-   ESCAPE HTML
+   SECURITY HELPERS
    ========================================================= */
 
 function escapeHTML(value) {
 
-  return String(value ?? "")
-
-    .replace(/&/g, "&amp;")
-
-    .replace(/</g, "&lt;")
-
-    .replace(/>/g, "&gt;")
-
-    .replace(/"/g, "&quot;")
-
-    .replace(/'/g, "&#039;");
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
 
-
-/* =========================================================
-   ESCAPE JAVASCRIPT STRING
-   ========================================================= */
 
 function escapeJS(value) {
 
-  return String(value ?? "")
-
-    .replace(/\\/g, "\\\\")
-
-    .replace(/'/g, "\\'")
-
-    .replace(/"/g, '\\"');
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+    .replace(
+      /'/g,
+      "\\'"
+    )
+    .replace(
+      /"/g,
+      '\\"'
+    );
 
 }
 
 
-/* =========================================================
-   FORMAT DATE
-   ========================================================= */
-
 function formatDate(date) {
 
-  if (!date) return "";
+  if (!date) {
+    return "";
+  }
 
-  return new Date(date)
-    .toLocaleString();
+  return new Date(
+    date
+  ).toLocaleString();
 
 }
 
@@ -1196,7 +1396,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   AUTO REFRESH NOTIFICATIONS
+   AUTO REFRESH
    ========================================================= */
 
 setInterval(
@@ -1204,10 +1404,4253 @@ setInterval(
   5000
 );
 
+setInterval(
+  loadVehicles,
+  10000
+);
+
+</script>
+
+</body>
+</html>
+```
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Smart Parking Operator Dashboard</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    header p {
+      margin: 7px 0 0;
+      color: #cbd5e1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      margin-top: 0;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    .register-btn {
+      width: 100%;
+      margin-top: 18px;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #16a34a;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .register-btn:hover {
+      background: #15803d;
+    }
+
+    .register-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .message.success {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .message.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .refresh-btn {
+      border: none;
+      padding: 9px 15px;
+      border-radius: 7px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
+    .vehicle {
+      border: 1px solid #d1d5db;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      background: #fafafa;
+    }
+
+    .vehicle-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .vehicle-header h3 {
+      margin: 0;
+    }
+
+    .status {
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .status-occupied {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .status-available {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .countdown {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .expired {
+      color: #b45309;
+    }
+
+    .release-btn {
+      margin-top: 12px;
+      padding: 9px 14px;
+      border: none;
+      border-radius: 7px;
+      background: #dc2626;
+      color: white;
+      cursor: pointer;
+    }
+
+    .release-btn:hover {
+      background: #b91c1c;
+    }
+
+    .notification {
+      background: #eff6ff;
+      border-left: 5px solid #2563eb;
+      padding: 12px;
+      border-radius: 7px;
+      margin-bottom: 10px;
+    }
+
+    .notification small {
+      color: #64748b;
+    }
+
+    .empty {
+      text-align: center;
+      color: #64748b;
+      padding: 15px;
+    }
+
+    @media (max-width: 700px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🚗 Smart Parking Operator Dashboard</h1>
+  <p>Vehicle Registration • Live Notifications • Parking Management</p>
+</header>
+
+<div class="container">
+
+  <!-- ================= VEHICLE REGISTRATION ================= -->
+
+  <div class="card">
+
+    <h2>🚗 Register Vehicle</h2>
+
+    <div class="form-grid">
+
+      <div>
+        <label for="qr_id">QR ID</label>
+        <input
+          type="text"
+          id="qr_id"
+          placeholder="Example: QR001"
+        >
+      </div>
+
+      <div>
+        <label for="owner_name">Owner Name</label>
+        <input
+          type="text"
+          id="owner_name"
+          placeholder="Enter owner name"
+        >
+      </div>
+
+      <div>
+        <label for="car_number">Car Number</label>
+        <input
+          type="text"
+          id="car_number"
+          placeholder="Example: GA01AB1234"
+        >
+      </div>
+
+      <div>
+        <label for="phone_number">Phone Number</label>
+        <input
+          type="text"
+          id="phone_number"
+          placeholder="+919876543210"
+        >
+      </div>
+
+      <div>
+        <label for="parking_time">
+          Parking Time
+        </label>
+
+        <input
+          type="number"
+          id="parking_time"
+          min="1"
+          placeholder="Minutes"
+        >
+      </div>
+
+      <div>
+        <label for="slot_number">
+          Parking Slot
+        </label>
+
+        <select id="slot_number">
+
+          <option value="">
+            Select Slot
+          </option>
+
+          <option value="1">
+            Slot 1
+          </option>
+
+          <option value="2">
+            Slot 2
+          </option>
+
+          <option value="3">
+            Slot 3
+          </option>
+
+          <option value="4">
+            Slot 4
+          </option>
+
+          <option value="5">
+            Slot 5
+          </option>
+
+        </select>
+      </div>
+
+      <div>
+        <label for="status">
+          Status
+        </label>
+
+        <select id="status">
+
+          <option value="OCCUPIED">
+            OCCUPIED
+          </option>
+
+          <option value="AVAILABLE">
+            AVAILABLE
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+    <button
+      type="button"
+      id="registerButton"
+      class="register-btn"
+      onclick="registerVehicle()"
+    >
+      🚗 Register Vehicle
+    </button>
+
+    <div
+      id="message"
+      class="message"
+    ></div>
+
+  </div>
+
+
+  <!-- ================= LIVE NOTIFICATIONS ================= -->
+
+  <div class="card">
+
+    <div class="section-header">
+
+      <h2>🔔 Live Notifications</h2>
+
+      <button
+        class="refresh-btn"
+        onclick="loadNotifications()"
+      >
+        🔄 Refresh
+      </button>
+
+    </div>
+
+    <div id="notifications">
+      <div class="empty">
+        Loading notifications...
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ================= REGISTERED VEHICLES ================= -->
+
+  <div class="card">
+
+    <div class="section-header">
+
+      <h2>🚘 Registered Vehicles</h2>
+
+      <button
+        class="refresh-btn"
+        onclick="loadVehicles()"
+      >
+        🔄 Refresh
+      </button>
+
+    </div>
+
+    <div id="vehicles">
+      <div class="empty">
+        Loading vehicles...
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
 
 /* =========================================================
-   AUTO REFRESH VEHICLES
+   SUPABASE
    ========================================================= */
+
+const SUPABASE_URL =
+  "YOUR_SUPABASE_URL";
+
+const SUPABASE_ANON_KEY =
+  "YOUR_SUPABASE_ANON_KEY";
+
+const db =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+
+/* =========================================================
+   SHOW MESSAGE
+   ========================================================= */
+
+function showMessage(text, type) {
+
+  const message =
+    document.getElementById("message");
+
+  message.textContent = text;
+
+  message.className =
+    "message " + type;
+
+}
+
+
+/* =========================================================
+   REGISTER VEHICLE
+   ========================================================= */
+
+async function registerVehicle() {
+
+  const button =
+    document.getElementById(
+      "registerButton"
+    );
+
+  try {
+
+    /* GET FORM VALUES */
+
+    const qr_id =
+      document.getElementById(
+        "qr_id"
+      ).value.trim();
+
+    const owner_name =
+      document.getElementById(
+        "owner_name"
+      ).value.trim();
+
+    const car_number =
+      document.getElementById(
+        "car_number"
+      ).value.trim();
+
+    const phone_number =
+      document.getElementById(
+        "phone_number"
+      ).value.trim();
+
+    const parking_time =
+      Number(
+        document.getElementById(
+          "parking_time"
+        ).value
+      );
+
+    const slot_number =
+      Number(
+        document.getElementById(
+          "slot_number"
+        ).value
+      );
+
+    const status =
+      document.getElementById(
+        "status"
+      ).value;
+
+
+    /* VALIDATION */
+
+    if (!qr_id) {
+
+      showMessage(
+        "Please enter QR ID.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (!owner_name) {
+
+      showMessage(
+        "Please enter owner name.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (!car_number) {
+
+      showMessage(
+        "Please enter car number.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (!phone_number) {
+
+      showMessage(
+        "Please enter phone number.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (
+      !parking_time ||
+      parking_time <= 0
+    ) {
+
+      showMessage(
+        "Please enter a valid parking time.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (
+      !slot_number ||
+      slot_number < 1 ||
+      slot_number > 5
+    ) {
+
+      showMessage(
+        "Please select Slot 1 to Slot 5.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    /* DISABLE BUTTON */
+
+    button.disabled = true;
+
+    button.textContent =
+      "Registering...";
+
+
+    /* =====================================================
+       CHECK QR ID
+       ===================================================== */
+
+    const {
+      data: existingQR,
+      error: qrError
+    } = await db
+      .from("cars")
+      .select("QR_ID")
+      .eq("QR_ID", qr_id)
+      .limit(1);
+
+
+    if (qrError) {
+
+      console.error(
+        "QR CHECK ERROR:",
+        qrError
+      );
+
+      showMessage(
+        "QR check failed: " +
+        qrError.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (
+      existingQR &&
+      existingQR.length > 0
+    ) {
+
+      showMessage(
+        "This QR ID is already registered.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    /* =====================================================
+       CHECK SLOT
+       ===================================================== */
+
+    const {
+      data: existingSlot,
+      error: slotError
+    } = await db
+      .from("cars")
+      .select(
+        "QR_ID,CAR_NUMBER"
+      )
+      .eq(
+        "SLOT_NUMBER",
+        slot_number
+      )
+      .eq(
+        "STATUS",
+        "OCCUPIED"
+      )
+      .limit(1);
+
+
+    if (slotError) {
+
+      console.error(
+        "SLOT CHECK ERROR:",
+        slotError
+      );
+
+      showMessage(
+        "Slot check failed: " +
+        slotError.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (
+      existingSlot &&
+      existingSlot.length > 0
+    ) {
+
+      showMessage(
+        "Slot " +
+        slot_number +
+        " is already occupied.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    /* =====================================================
+       PARKING TIMER
+
+       Exhibition mode:
+       1 minute = 1 second
+       ===================================================== */
+
+    const parking_start =
+      new Date();
+
+
+    const parking_end =
+      new Date(
+        parking_start.getTime() +
+        parking_time * 1000
+      );
+
+
+    /* =====================================================
+       DATABASE OBJECT
+
+       EXACT COLUMN NAMES
+       ===================================================== */
+
+    const vehicleData = {
+
+      QR_ID: qr_id,
+
+      OWNER_NAME: owner_name,
+
+      CAR_NUMBER: car_number,
+
+      PHONE_NUMBER: phone_number,
+
+      PARKING_TIME: parking_time,
+
+      STATUS: status,
+
+      PARK: "YES",
+
+      SLOT_NUMBER: slot_number,
+
+      parking_start:
+        parking_start.toISOString(),
+
+      parking_end:
+        parking_end.toISOString()
+
+    };
+
+
+    console.log(
+      "Vehicle data:",
+      vehicleData
+    );
+
+
+    /* =====================================================
+       INSERT
+       ===================================================== */
+
+    const {
+      error: insertError
+    } = await db
+      .from("cars")
+      .insert([
+        vehicleData
+      ]);
+
+
+    if (insertError) {
+
+      console.error(
+        "INSERT ERROR:",
+        insertError
+      );
+
+      showMessage(
+        "Registration failed: " +
+        insertError.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    /* =====================================================
+       SUCCESS
+       ===================================================== */
+
+    showMessage(
+      "✅ Vehicle registered successfully!",
+      "success"
+    );
+
+
+    /* CLEAR FORM */
+
+    document.getElementById(
+      "qr_id"
+    ).value = "";
+
+    document.getElementById(
+      "owner_name"
+    ).value = "";
+
+    document.getElementById(
+      "car_number"
+    ).value = "";
+
+    document.getElementById(
+      "phone_number"
+    ).value = "";
+
+    document.getElementById(
+      "parking_time"
+    ).value = "";
+
+    document.getElementById(
+      "slot_number"
+    ).value = "";
+
+    document.getElementById(
+      "status"
+    ).value = "OCCUPIED";
+
+
+    loadVehicles();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "UNEXPECTED ERROR:",
+      error
+    );
+
+    showMessage(
+      "Unexpected error: " +
+      error.message,
+      "error"
+    );
+
+  }
+
+  finally {
+
+    button.disabled = false;
+
+    button.textContent =
+      "🚗 Register Vehicle";
+
+  }
+
+}
+
+
+/* =========================================================
+   LOAD VEHICLES
+   ========================================================= */
+
+async function loadVehicles() {
+
+  const container =
+    document.getElementById(
+      "vehicles"
+    );
+
+  container.innerHTML =
+    '<div class="empty">Loading...</div>';
+
+
+  const {
+    data,
+    error
+  } = await db
+    .from("cars")
+    .select(
+      "QR_ID,OWNER_NAME,CAR_NUMBER,PHONE_NUMBER,PARKING_TIME,STATUS,PARK,SLOT_NUMBER,parking_start,parking_end"
+    )
+    .order(
+      "parking_start",
+      {
+        ascending: false
+      }
+    );
+
+
+  if (error) {
+
+    console.error(
+      "LOAD VEHICLES ERROR:",
+      error
+    );
+
+    container.innerHTML =
+      '<div class="empty">Failed to load vehicles:<br>' +
+      escapeHTML(error.message) +
+      '</div>';
+
+    return;
+  }
+
+
+  if (
+    !data ||
+    data.length === 0
+  ) {
+
+    container.innerHTML =
+      '<div class="empty">No vehicles registered.</div>';
+
+    return;
+  }
+
+
+  container.innerHTML = "";
+
+
+  data.forEach(
+    vehicle => {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+      div.className =
+        "vehicle";
+
+
+      const statusClass =
+        vehicle.STATUS === "OCCUPIED"
+          ? "status-occupied"
+          : "status-available";
+
+
+      div.innerHTML = `
+
+        <div class="vehicle-header">
+
+          <h3>
+            🚗
+            ${escapeHTML(
+              vehicle.CAR_NUMBER
+            )}
+          </h3>
+
+          <span class="status ${statusClass}">
+            ${escapeHTML(
+              vehicle.STATUS
+            )}
+          </span>
+
+        </div>
+
+
+        <p>
+          <b>QR ID:</b>
+          ${escapeHTML(
+            vehicle.QR_ID
+          )}
+        </p>
+
+
+        <p>
+          <b>Owner:</b>
+          ${escapeHTML(
+            vehicle.OWNER_NAME
+          )}
+        </p>
+
+
+        <p>
+          <b>Phone:</b>
+          ${escapeHTML(
+            vehicle.PHONE_NUMBER
+          )}
+        </p>
+
+
+        <p>
+          <b>Slot:</b>
+          ${escapeHTML(
+            String(
+              vehicle.SLOT_NUMBER
+            )
+          )}
+        </p>
+
+
+        <p>
+          <b>Parking Time:</b>
+          ${escapeHTML(
+            String(
+              vehicle.PARKING_TIME
+            )
+          )}
+          minutes
+        </p>
+
+
+        <p>
+          <b>Park:</b>
+          ${escapeHTML(
+            String(
+              vehicle.PARK
+            )
+          )}
+        </p>
+
+
+        <div
+          class="countdown"
+          id="timer-${escapeHTML(
+            vehicle.QR_ID
+          )}"
+        >
+          Calculating...
+        </div>
+
+
+        ${
+          vehicle.STATUS === "OCCUPIED"
+          ? `
+            <button
+              class="release-btn"
+              onclick="releaseVehicle('${escapeJS(
+                vehicle.QR_ID
+              )}')"
+            >
+              🚪 Release Vehicle
+            </button>
+          `
+          : ""
+        }
+
+      `;
+
+
+      container.appendChild(
+        div
+      );
+
+
+      updateCountdown(
+        vehicle.QR_ID,
+        vehicle.parking_end
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   COUNTDOWN
+   ========================================================= */
+
+function updateCountdown(
+  qr_id,
+  parking_end
+) {
+
+  const timer =
+    document.getElementById(
+      "timer-" + qr_id
+    );
+
+
+  if (!timer) return;
+
+
+  function update() {
+
+    if (!parking_end) {
+
+      timer.textContent =
+        "No parking time";
+
+      return;
+    }
+
+
+    const end =
+      new Date(
+        parking_end
+      ).getTime();
+
+
+    const now =
+      Date.now();
+
+
+    const difference =
+      end - now;
+
+
+    if (difference <= 0) {
+
+      timer.textContent =
+        "⏰ PARKING TIME EXPIRED";
+
+      timer.className =
+        "countdown expired";
+
+      return;
+    }
+
+
+    const totalSeconds =
+      Math.floor(
+        difference / 1000
+      );
+
+
+    const minutes =
+      Math.floor(
+        totalSeconds / 60
+      );
+
+
+    const seconds =
+      totalSeconds % 60;
+
+
+    timer.textContent =
+      "⏳ Remaining: " +
+      minutes +
+      "m " +
+      seconds +
+      "s";
+
+  }
+
+
+  update();
+
+
+  setInterval(
+    update,
+    1000
+  );
+
+}
+
+
+/* =========================================================
+   RELEASE VEHICLE
+   ========================================================= */
+
+async function releaseVehicle(
+  qr_id
+) {
+
+  const confirmed =
+    confirm(
+      "Release this vehicle?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  const {
+    error
+  } = await db
+    .from("cars")
+    .update({
+
+      STATUS: "AVAILABLE",
+
+      PARK: "NO"
+
+    })
+    .eq(
+      "QR_ID",
+      qr_id
+    );
+
+
+  if (error) {
+
+    console.error(
+      "RELEASE ERROR:",
+      error
+    );
+
+    alert(
+      "Failed to release vehicle:\n" +
+      error.message
+    );
+
+    return;
+  }
+
+
+  alert(
+    "✅ Vehicle released successfully."
+  );
+
+
+  loadVehicles();
+
+}
+
+
+/* =========================================================
+   LOAD NOTIFICATIONS
+   ========================================================= */
+
+async function loadNotifications() {
+
+  const container =
+    document.getElementById(
+      "notifications"
+    );
+
+
+  container.innerHTML =
+    '<div class="empty">Loading...</div>';
+
+
+  const {
+    data,
+    error
+  } = await db
+    .from("notifications")
+    .select(
+      "id,qr_id,car_number,message,status,created_at"
+    )
+    .order(
+      "created_at",
+      {
+        ascending: false
+      }
+    )
+    .limit(30);
+
+
+  if (error) {
+
+    console.error(
+      "NOTIFICATION ERROR:",
+      error
+    );
+
+    container.innerHTML =
+      '<div class="empty">Failed to load notifications.</div>';
+
+    return;
+  }
+
+
+  if (
+    !data ||
+    data.length === 0
+  ) {
+
+    container.innerHTML =
+      '<div class="empty">No notifications yet.</div>';
+
+    return;
+  }
+
+
+  container.innerHTML = "";
+
+
+  data.forEach(
+    notification => {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+      div.className =
+        "notification";
+
+
+      div.innerHTML = `
+
+        <b>🔔 QR ID:</b>
+        ${escapeHTML(
+          notification.qr_id
+        )}
+
+        <br>
+
+        <b>🚗 Car:</b>
+        ${escapeHTML(
+          notification.car_number
+        )}
+
+        <br><br>
+
+        ${escapeHTML(
+          notification.message
+        )}
+
+        <br><br>
+
+        <small>
+          ${formatDate(
+            notification.created_at
+          )}
+        </small>
+
+      `;
+
+
+      container.appendChild(
+        div
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   SECURITY HELPERS
+   ========================================================= */
+
+function escapeHTML(value) {
+
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+function escapeJS(value) {
+
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+    .replace(
+      /'/g,
+      "\\'"
+    )
+    .replace(
+      /"/g,
+      '\\"'
+    );
+
+}
+
+
+function formatDate(date) {
+
+  if (!date) {
+    return "";
+  }
+
+  return new Date(
+    date
+  ).toLocaleString();
+
+}
+
+
+/* =========================================================
+   INITIAL LOAD
+   ========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    loadVehicles();
+
+    loadNotifications();
+
+  }
+);
+
+
+/* =========================================================
+   AUTO REFRESH
+   ========================================================= */
+
+setInterval(
+  loadNotifications,
+  5000
+);
+
+setInterval(
+  loadVehicles,
+  10000
+);
+
+</script>
+
+</body>
+</html>
+```
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Smart Parking Operator Dashboard</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    header p {
+      margin: 7px 0 0;
+      color: #cbd5e1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      margin-top: 0;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    .register-btn {
+      width: 100%;
+      margin-top: 18px;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #16a34a;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .register-btn:hover {
+      background: #15803d;
+    }
+
+    .register-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .message.success {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .message.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .refresh-btn {
+      border: none;
+      padding: 9px 15px;
+      border-radius: 7px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
+    .vehicle {
+      border: 1px solid #d1d5db;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      background: #fafafa;
+    }
+
+    .vehicle-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .vehicle-header h3 {
+      margin: 0;
+    }
+
+    .status {
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .status-occupied {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .status-available {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .countdown {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .expired {
+      color: #b45309;
+    }
+
+    .release-btn {
+      margin-top: 12px;
+      padding: 9px 14px;
+      border: none;
+      border-radius: 7px;
+      background: #dc2626;
+      color: white;
+      cursor: pointer;
+    }
+
+    .release-btn:hover {
+      background: #b91c1c;
+    }
+
+    .notification {
+      background: #eff6ff;
+      border-left: 5px solid #2563eb;
+      padding: 12px;
+      border-radius: 7px;
+      margin-bottom: 10px;
+    }
+
+    .notification small {
+      color: #64748b;
+    }
+
+    .empty {
+      text-align: center;
+      color: #64748b;
+      padding: 15px;
+    }
+
+    @media (max-width: 700px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🚗 Smart Parking Operator Dashboard</h1>
+  <p>Vehicle Registration • Live Notifications • Parking Management</p>
+</header>
+
+<div class="container">
+
+  <!-- ================= VEHICLE REGISTRATION ================= -->
+
+  <div class="card">
+
+    <h2>🚗 Register Vehicle</h2>
+
+    <div class="form-grid">
+
+      <div>
+        <label for="qr_id">QR ID</label>
+        <input
+          type="text"
+          id="qr_id"
+          placeholder="Example: QR001"
+        >
+      </div>
+
+      <div>
+        <label for="owner_name">Owner Name</label>
+        <input
+          type="text"
+          id="owner_name"
+          placeholder="Enter owner name"
+        >
+      </div>
+
+      <div>
+        <label for="car_number">Car Number</label>
+        <input
+          type="text"
+          id="car_number"
+          placeholder="Example: GA01AB1234"
+        >
+      </div>
+
+      <div>
+        <label for="phone_number">Phone Number</label>
+        <input
+          type="text"
+          id="phone_number"
+          placeholder="+919876543210"
+        >
+      </div>
+
+      <div>
+        <label for="parking_time">
+          Parking Time
+        </label>
+
+        <input
+          type="number"
+          id="parking_time"
+          min="1"
+          placeholder="Minutes"
+        >
+      </div>
+
+      <div>
+        <label for="slot_number">
+          Parking Slot
+        </label>
+
+        <select id="slot_number">
+
+          <option value="">
+            Select Slot
+          </option>
+
+          <option value="1">
+            Slot 1
+          </option>
+
+          <option value="2">
+            Slot 2
+          </option>
+
+          <option value="3">
+            Slot 3
+          </option>
+
+          <option value="4">
+            Slot 4
+          </option>
+
+          <option value="5">
+            Slot 5
+          </option>
+
+        </select>
+      </div>
+
+      <div>
+        <label for="status">
+          Status
+        </label>
+
+        <select id="status">
+
+          <option value="OCCUPIED">
+            OCCUPIED
+          </option>
+
+          <option value="AVAILABLE">
+            AVAILABLE
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+    <button
+      type="button"
+      id="registerButton"
+      class="register-btn"
+      onclick="registerVehicle()"
+    >
+      🚗 Register Vehicle
+    </button>
+
+    <div
+      id="message"
+      class="message"
+    ></div>
+
+  </div>
+
+
+  <!-- ================= LIVE NOTIFICATIONS ================= -->
+
+  <div class="card">
+
+    <div class="section-header">
+
+      <h2>🔔 Live Notifications</h2>
+
+      <button
+        class="refresh-btn"
+        onclick="loadNotifications()"
+      >
+        🔄 Refresh
+      </button>
+
+    </div>
+
+    <div id="notifications">
+      <div class="empty">
+        Loading notifications...
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ================= REGISTERED VEHICLES ================= -->
+
+  <div class="card">
+
+    <div class="section-header">
+
+      <h2>🚘 Registered Vehicles</h2>
+
+      <button
+        class="refresh-btn"
+        onclick="loadVehicles()"
+      >
+        🔄 Refresh
+      </button>
+
+    </div>
+
+    <div id="vehicles">
+      <div class="empty">
+        Loading vehicles...
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SUPABASE
+   ========================================================= */
+
+const SUPABASE_URL =
+  "https://yokdshtjbjlhqmmrnpxh.supabase.co";
+
+const SUPABASE_ANON_KEY =
+  "sb_publishable_2ZDoGT6xIclKRzqbE78Vnw_Uwp7BRdK";
+
+const db =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+
+/* =========================================================
+   SHOW MESSAGE
+   ========================================================= */
+
+function showMessage(text, type) {
+
+  const message =
+    document.getElementById("message");
+
+  message.textContent = text;
+
+  message.className =
+    "message " + type;
+
+}
+
+
+/* =========================================================
+   REGISTER VEHICLE
+   ========================================================= */
+
+async function registerVehicle() {
+
+  const button =
+    document.getElementById(
+      "registerButton"
+    );
+
+  try {
+
+    /* GET FORM VALUES */
+
+    const qr_id =
+      document.getElementById(
+        "qr_id"
+      ).value.trim();
+
+    const owner_name =
+      document.getElementById(
+        "owner_name"
+      ).value.trim();
+
+    const car_number =
+      document.getElementById(
+        "car_number"
+      ).value.trim();
+
+    const phone_number =
+      document.getElementById(
+        "phone_number"
+      ).value.trim();
+
+    const parking_time =
+      Number(
+        document.getElementById(
+          "parking_time"
+        ).value
+      );
+
+    const slot_number =
+      Number(
+        document.getElementById(
+          "slot_number"
+        ).value
+      );
+
+    const status =
+      document.getElementById(
+        "status"
+      ).value;
+
+
+    /* VALIDATION */
+
+    if (!qr_id) {
+
+      showMessage(
+        "Please enter QR ID.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (!owner_name) {
+
+      showMessage(
+        "Please enter owner name.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (!car_number) {
+
+      showMessage(
+        "Please enter car number.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (!phone_number) {
+
+      showMessage(
+        "Please enter phone number.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (
+      !parking_time ||
+      parking_time <= 0
+    ) {
+
+      showMessage(
+        "Please enter a valid parking time.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (
+      !slot_number ||
+      slot_number < 1 ||
+      slot_number > 5
+    ) {
+
+      showMessage(
+        "Please select Slot 1 to Slot 5.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    /* DISABLE BUTTON */
+
+    button.disabled = true;
+
+    button.textContent =
+      "Registering...";
+
+
+    /* =====================================================
+       CHECK QR ID
+       ===================================================== */
+
+    const {
+      data: existingQR,
+      error: qrError
+    } = await db
+      .from("cars")
+      .select("QR_ID")
+      .eq("QR_ID", qr_id)
+      .limit(1);
+
+
+    if (qrError) {
+
+      console.error(
+        "QR CHECK ERROR:",
+        qrError
+      );
+
+      showMessage(
+        "QR check failed: " +
+        qrError.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (
+      existingQR &&
+      existingQR.length > 0
+    ) {
+
+      showMessage(
+        "This QR ID is already registered.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    /* =====================================================
+       CHECK SLOT
+       ===================================================== */
+
+    const {
+      data: existingSlot,
+      error: slotError
+    } = await db
+      .from("cars")
+      .select(
+        "QR_ID,CAR_NUMBER"
+      )
+      .eq(
+        "SLOT_NUMBER",
+        slot_number
+      )
+      .eq(
+        "STATUS",
+        "OCCUPIED"
+      )
+      .limit(1);
+
+
+    if (slotError) {
+
+      console.error(
+        "SLOT CHECK ERROR:",
+        slotError
+      );
+
+      showMessage(
+        "Slot check failed: " +
+        slotError.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (
+      existingSlot &&
+      existingSlot.length > 0
+    ) {
+
+      showMessage(
+        "Slot " +
+        slot_number +
+        " is already occupied.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    /* =====================================================
+       PARKING TIMER
+
+       Exhibition mode:
+       1 minute = 1 second
+       ===================================================== */
+
+    const parking_start =
+      new Date();
+
+
+    const parking_end =
+      new Date(
+        parking_start.getTime() +
+        parking_time * 1000
+      );
+
+
+    /* =====================================================
+       DATABASE OBJECT
+
+       EXACT COLUMN NAMES
+       ===================================================== */
+
+    const vehicleData = {
+
+      QR_ID: qr_id,
+
+      OWNER_NAME: owner_name,
+
+      CAR_NUMBER: car_number,
+
+      PHONE_NUMBER: phone_number,
+
+      PARKING_TIME: parking_time,
+
+      STATUS: status,
+
+      PARK: "YES",
+
+      SLOT_NUMBER: slot_number,
+
+      parking_start:
+        parking_start.toISOString(),
+
+      parking_end:
+        parking_end.toISOString()
+
+    };
+
+
+    console.log(
+      "Vehicle data:",
+      vehicleData
+    );
+
+
+    /* =====================================================
+       INSERT
+       ===================================================== */
+
+    const {
+      error: insertError
+    } = await db
+      .from("cars")
+      .insert([
+        vehicleData
+      ]);
+
+
+    if (insertError) {
+
+      console.error(
+        "INSERT ERROR:",
+        insertError
+      );
+
+      showMessage(
+        "Registration failed: " +
+        insertError.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    /* =====================================================
+       SUCCESS
+       ===================================================== */
+
+    showMessage(
+      "✅ Vehicle registered successfully!",
+      "success"
+    );
+
+
+    /* CLEAR FORM */
+
+    document.getElementById(
+      "qr_id"
+    ).value = "";
+
+    document.getElementById(
+      "owner_name"
+    ).value = "";
+
+    document.getElementById(
+      "car_number"
+    ).value = "";
+
+    document.getElementById(
+      "phone_number"
+    ).value = "";
+
+    document.getElementById(
+      "parking_time"
+    ).value = "";
+
+    document.getElementById(
+      "slot_number"
+    ).value = "";
+
+    document.getElementById(
+      "status"
+    ).value = "OCCUPIED";
+
+
+    loadVehicles();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "UNEXPECTED ERROR:",
+      error
+    );
+
+    showMessage(
+      "Unexpected error: " +
+      error.message,
+      "error"
+    );
+
+  }
+
+  finally {
+
+    button.disabled = false;
+
+    button.textContent =
+      "🚗 Register Vehicle";
+
+  }
+
+}
+
+
+/* =========================================================
+   LOAD VEHICLES
+   ========================================================= */
+
+async function loadVehicles() {
+
+  const container =
+    document.getElementById(
+      "vehicles"
+    );
+
+  container.innerHTML =
+    '<div class="empty">Loading...</div>';
+
+
+  const {
+    data,
+    error
+  } = await db
+    .from("cars")
+    .select(
+      "QR_ID,OWNER_NAME,CAR_NUMBER,PHONE_NUMBER,PARKING_TIME,STATUS,PARK,SLOT_NUMBER,parking_start,parking_end"
+    )
+    .order(
+      "parking_start",
+      {
+        ascending: false
+      }
+    );
+
+
+  if (error) {
+
+    console.error(
+      "LOAD VEHICLES ERROR:",
+      error
+    );
+
+    container.innerHTML =
+      '<div class="empty">Failed to load vehicles:<br>' +
+      escapeHTML(error.message) +
+      '</div>';
+
+    return;
+  }
+
+
+  if (
+    !data ||
+    data.length === 0
+  ) {
+
+    container.innerHTML =
+      '<div class="empty">No vehicles registered.</div>';
+
+    return;
+  }
+
+
+  container.innerHTML = "";
+
+
+  data.forEach(
+    vehicle => {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+      div.className =
+        "vehicle";
+
+
+      const statusClass =
+        vehicle.STATUS === "OCCUPIED"
+          ? "status-occupied"
+          : "status-available";
+
+
+      div.innerHTML = `
+
+        <div class="vehicle-header">
+
+          <h3>
+            🚗
+            ${escapeHTML(
+              vehicle.CAR_NUMBER
+            )}
+          </h3>
+
+          <span class="status ${statusClass}">
+            ${escapeHTML(
+              vehicle.STATUS
+            )}
+          </span>
+
+        </div>
+
+
+        <p>
+          <b>QR ID:</b>
+          ${escapeHTML(
+            vehicle.QR_ID
+          )}
+        </p>
+
+
+        <p>
+          <b>Owner:</b>
+          ${escapeHTML(
+            vehicle.OWNER_NAME
+          )}
+        </p>
+
+
+        <p>
+          <b>Phone:</b>
+          ${escapeHTML(
+            vehicle.PHONE_NUMBER
+          )}
+        </p>
+
+
+        <p>
+          <b>Slot:</b>
+          ${escapeHTML(
+            String(
+              vehicle.SLOT_NUMBER
+            )
+          )}
+        </p>
+
+
+        <p>
+          <b>Parking Time:</b>
+          ${escapeHTML(
+            String(
+              vehicle.PARKING_TIME
+            )
+          )}
+          minutes
+        </p>
+
+
+        <p>
+          <b>Park:</b>
+          ${escapeHTML(
+            String(
+              vehicle.PARK
+            )
+          )}
+        </p>
+
+
+        <div
+          class="countdown"
+          id="timer-${escapeHTML(
+            vehicle.QR_ID
+          )}"
+        >
+          Calculating...
+        </div>
+
+
+        ${
+          vehicle.STATUS === "OCCUPIED"
+          ? `
+            <button
+              class="release-btn"
+              onclick="releaseVehicle('${escapeJS(
+                vehicle.QR_ID
+              )}')"
+            >
+              🚪 Release Vehicle
+            </button>
+          `
+          : ""
+        }
+
+      `;
+
+
+      container.appendChild(
+        div
+      );
+
+
+      updateCountdown(
+        vehicle.QR_ID,
+        vehicle.parking_end
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   COUNTDOWN
+   ========================================================= */
+
+function updateCountdown(
+  qr_id,
+  parking_end
+) {
+
+  const timer =
+    document.getElementById(
+      "timer-" + qr_id
+    );
+
+
+  if (!timer) return;
+
+
+  function update() {
+
+    if (!parking_end) {
+
+      timer.textContent =
+        "No parking time";
+
+      return;
+    }
+
+
+    const end =
+      new Date(
+        parking_end
+      ).getTime();
+
+
+    const now =
+      Date.now();
+
+
+    const difference =
+      end - now;
+
+
+    if (difference <= 0) {
+
+      timer.textContent =
+        "⏰ PARKING TIME EXPIRED";
+
+      timer.className =
+        "countdown expired";
+
+      return;
+    }
+
+
+    const totalSeconds =
+      Math.floor(
+        difference / 1000
+      );
+
+
+    const minutes =
+      Math.floor(
+        totalSeconds / 60
+      );
+
+
+    const seconds =
+      totalSeconds % 60;
+
+
+    timer.textContent =
+      "⏳ Remaining: " +
+      minutes +
+      "m " +
+      seconds +
+      "s";
+
+  }
+
+
+  update();
+
+
+  setInterval(
+    update,
+    1000
+  );
+
+}
+
+
+/* =========================================================
+   RELEASE VEHICLE
+   ========================================================= */
+
+async function releaseVehicle(
+  qr_id
+) {
+
+  const confirmed =
+    confirm(
+      "Release this vehicle?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  const {
+    error
+  } = await db
+    .from("cars")
+    .update({
+
+      STATUS: "AVAILABLE",
+
+      PARK: "NO"
+
+    })
+    .eq(
+      "QR_ID",
+      qr_id
+    );
+
+
+  if (error) {
+
+    console.error(
+      "RELEASE ERROR:",
+      error
+    );
+
+    alert(
+      "Failed to release vehicle:\n" +
+      error.message
+    );
+
+    return;
+  }
+
+
+  alert(
+    "✅ Vehicle released successfully."
+  );
+
+
+  loadVehicles();
+
+}
+
+
+/* =========================================================
+   LOAD NOTIFICATIONS
+   ========================================================= */
+
+async function loadNotifications() {
+
+  const container =
+    document.getElementById(
+      "notifications"
+    );
+
+
+  container.innerHTML =
+    '<div class="empty">Loading...</div>';
+
+
+  const {
+    data,
+    error
+  } = await db
+    .from("notifications")
+    .select(
+      "id,qr_id,car_number,message,status,created_at"
+    )
+    .order(
+      "created_at",
+      {
+        ascending: false
+      }
+    )
+    .limit(30);
+
+
+  if (error) {
+
+    console.error(
+      "NOTIFICATION ERROR:",
+      error
+    );
+
+    container.innerHTML =
+      '<div class="empty">Failed to load notifications.</div>';
+
+    return;
+  }
+
+
+  if (
+    !data ||
+    data.length === 0
+  ) {
+
+    container.innerHTML =
+      '<div class="empty">No notifications yet.</div>';
+
+    return;
+  }
+
+
+  container.innerHTML = "";
+
+
+  data.forEach(
+    notification => {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+      div.className =
+        "notification";
+
+
+      div.innerHTML = `
+
+        <b>🔔 QR ID:</b>
+        ${escapeHTML(
+          notification.qr_id
+        )}
+
+        <br>
+
+        <b>🚗 Car:</b>
+        ${escapeHTML(
+          notification.car_number
+        )}
+
+        <br><br>
+
+        ${escapeHTML(
+          notification.message
+        )}
+
+        <br><br>
+
+        <small>
+          ${formatDate(
+            notification.created_at
+          )}
+        </small>
+
+      `;
+
+
+      container.appendChild(
+        div
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   SECURITY HELPERS
+   ========================================================= */
+
+function escapeHTML(value) {
+
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+function escapeJS(value) {
+
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+    .replace(
+      /'/g,
+      "\\'"
+    )
+    .replace(
+      /"/g,
+      '\\"'
+    );
+
+}
+
+
+function formatDate(date) {
+
+  if (!date) {
+    return "";
+  }
+
+  return new Date(
+    date
+  ).toLocaleString();
+
+}
+
+
+/* =========================================================
+   INITIAL LOAD
+   ========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    loadVehicles();
+
+    loadNotifications();
+
+  }
+);
+
+
+/* =========================================================
+   AUTO REFRESH
+   ========================================================= */
+
+setInterval(
+  loadNotifications,
+  5000
+);
+
+setInterval(
+  loadVehicles,
+  10000
+);
+
+</script>
+
+</body>
+</html>
+```
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Smart Parking Operator Dashboard</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    header p {
+      margin: 7px 0 0;
+      color: #cbd5e1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      margin-top: 0;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    .register-btn {
+      width: 100%;
+      margin-top: 18px;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #16a34a;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .register-btn:hover {
+      background: #15803d;
+    }
+
+    .register-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .message.success {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .message.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .refresh-btn {
+      border: none;
+      padding: 9px 15px;
+      border-radius: 7px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
+    .vehicle {
+      border: 1px solid #d1d5db;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      background: #fafafa;
+    }
+
+    .vehicle-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .vehicle-header h3 {
+      margin: 0;
+    }
+
+    .status {
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .status-occupied {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .status-available {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .countdown {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .expired {
+      color: #b45309;
+    }
+
+    .release-btn {
+      margin-top: 12px;
+      padding: 9px 14px;
+      border: none;
+      border-radius: 7px;
+      background: #dc2626;
+      color: white;
+      cursor: pointer;
+    }
+
+    .release-btn:hover {
+      background: #b91c1c;
+    }
+
+    .notification {
+      background: #eff6ff;
+      border-left: 5px solid #2563eb;
+      padding: 12px;
+      border-radius: 7px;
+      margin-bottom: 10px;
+    }
+
+    .notification small {
+      color: #64748b;
+    }
+
+    .empty {
+      text-align: center;
+      color: #64748b;
+      padding: 15px;
+    }
+
+    @media (max-width: 700px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🚗 Smart Parking Operator Dashboard</h1>
+  <p>Vehicle Registration • Live Notifications • Parking Management</p>
+</header>
+
+<div class="container">
+
+  <!-- ================= VEHICLE REGISTRATION ================= -->
+
+  <div class="card">
+
+    <h2>🚗 Register Vehicle</h2>
+
+    <div class="form-grid">
+
+      <div>
+        <label for="qr_id">QR ID</label>
+        <input
+          type="text"
+          id="qr_id"
+          placeholder="Example: QR001"
+        >
+      </div>
+
+      <div>
+        <label for="owner_name">Owner Name</label>
+        <input
+          type="text"
+          id="owner_name"
+          placeholder="Enter owner name"
+        >
+      </div>
+
+      <div>
+        <label for="car_number">Car Number</label>
+        <input
+          type="text"
+          id="car_number"
+          placeholder="Example: GA01AB1234"
+        >
+      </div>
+
+      <div>
+        <label for="phone_number">Phone Number</label>
+        <input
+          type="text"
+          id="phone_number"
+          placeholder="+919876543210"
+        >
+      </div>
+
+      <div>
+        <label for="parking_time">
+          Parking Time
+        </label>
+
+        <input
+          type="number"
+          id="parking_time"
+          min="1"
+          placeholder="Minutes"
+        >
+      </div>
+
+      <div>
+        <label for="slot_number">
+          Parking Slot
+        </label>
+
+        <select id="slot_number">
+
+          <option value="">
+            Select Slot
+          </option>
+
+          <option value="1">
+            Slot 1
+          </option>
+
+          <option value="2">
+            Slot 2
+          </option>
+
+          <option value="3">
+            Slot 3
+          </option>
+
+          <option value="4">
+            Slot 4
+          </option>
+
+          <option value="5">
+            Slot 5
+          </option>
+
+        </select>
+      </div>
+
+      <div>
+        <label for="status">
+          Status
+        </label>
+
+        <select id="status">
+
+          <option value="OCCUPIED">
+            OCCUPIED
+          </option>
+
+          <option value="AVAILABLE">
+            AVAILABLE
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+    <button
+      type="button"
+      id="registerButton"
+      class="register-btn"
+      onclick="registerVehicle()"
+    >
+      🚗 Register Vehicle
+    </button>
+
+    <div
+      id="message"
+      class="message"
+    ></div>
+
+  </div>
+
+
+  <!-- ================= LIVE NOTIFICATIONS ================= -->
+
+  <div class="card">
+
+    <div class="section-header">
+
+      <h2>🔔 Live Notifications</h2>
+
+      <button
+        class="refresh-btn"
+        onclick="loadNotifications()"
+      >
+        🔄 Refresh
+      </button>
+
+    </div>
+
+    <div id="notifications">
+      <div class="empty">
+        Loading notifications...
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ================= REGISTERED VEHICLES ================= -->
+
+  <div class="card">
+
+    <div class="section-header">
+
+      <h2>🚘 Registered Vehicles</h2>
+
+      <button
+        class="refresh-btn"
+        onclick="loadVehicles()"
+      >
+        🔄 Refresh
+      </button>
+
+    </div>
+
+    <div id="vehicles">
+      <div class="empty">
+        Loading vehicles...
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SUPABASE
+   ========================================================= */
+
+const SUPABASE_URL =
+  "YOUR_SUPABASE_URL";
+
+const SUPABASE_ANON_KEY =
+  "YOUR_SUPABASE_ANON_KEY";
+
+const db =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+
+/* =========================================================
+   SHOW MESSAGE
+   ========================================================= */
+
+function showMessage(text, type) {
+
+  const message =
+    document.getElementById("message");
+
+  message.textContent = text;
+
+  message.className =
+    "message " + type;
+
+}
+
+
+/* =========================================================
+   REGISTER VEHICLE
+   ========================================================= */
+
+async function registerVehicle() {
+
+  const button =
+    document.getElementById(
+      "registerButton"
+    );
+
+  try {
+
+    /* GET FORM VALUES */
+
+    const qr_id =
+      document.getElementById(
+        "qr_id"
+      ).value.trim();
+
+    const owner_name =
+      document.getElementById(
+        "owner_name"
+      ).value.trim();
+
+    const car_number =
+      document.getElementById(
+        "car_number"
+      ).value.trim();
+
+    const phone_number =
+      document.getElementById(
+        "phone_number"
+      ).value.trim();
+
+    const parking_time =
+      Number(
+        document.getElementById(
+          "parking_time"
+        ).value
+      );
+
+    const slot_number =
+      Number(
+        document.getElementById(
+          "slot_number"
+        ).value
+      );
+
+    const status =
+      document.getElementById(
+        "status"
+      ).value;
+
+
+    /* VALIDATION */
+
+    if (!qr_id) {
+
+      showMessage(
+        "Please enter QR ID.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (!owner_name) {
+
+      showMessage(
+        "Please enter owner name.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (!car_number) {
+
+      showMessage(
+        "Please enter car number.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (!phone_number) {
+
+      showMessage(
+        "Please enter phone number.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (
+      !parking_time ||
+      parking_time <= 0
+    ) {
+
+      showMessage(
+        "Please enter a valid parking time.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (
+      !slot_number ||
+      slot_number < 1 ||
+      slot_number > 5
+    ) {
+
+      showMessage(
+        "Please select Slot 1 to Slot 5.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    /* DISABLE BUTTON */
+
+    button.disabled = true;
+
+    button.textContent =
+      "Registering...";
+
+
+    /* =====================================================
+       CHECK QR ID
+       ===================================================== */
+
+    const {
+      data: existingQR,
+      error: qrError
+    } = await db
+      .from("cars")
+      .select("QR_ID")
+      .eq("QR_ID", qr_id)
+      .limit(1);
+
+
+    if (qrError) {
+
+      console.error(
+        "QR CHECK ERROR:",
+        qrError
+      );
+
+      showMessage(
+        "QR check failed: " +
+        qrError.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (
+      existingQR &&
+      existingQR.length > 0
+    ) {
+
+      showMessage(
+        "This QR ID is already registered.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    /* =====================================================
+       CHECK SLOT
+       ===================================================== */
+
+    const {
+      data: existingSlot,
+      error: slotError
+    } = await db
+      .from("cars")
+      .select(
+        "QR_ID,CAR_NUMBER"
+      )
+      .eq(
+        "SLOT_NUMBER",
+        slot_number
+      )
+      .eq(
+        "STATUS",
+        "OCCUPIED"
+      )
+      .limit(1);
+
+
+    if (slotError) {
+
+      console.error(
+        "SLOT CHECK ERROR:",
+        slotError
+      );
+
+      showMessage(
+        "Slot check failed: " +
+        slotError.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (
+      existingSlot &&
+      existingSlot.length > 0
+    ) {
+
+      showMessage(
+        "Slot " +
+        slot_number +
+        " is already occupied.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    /* =====================================================
+       PARKING TIMER
+
+       Exhibition mode:
+       1 minute = 1 second
+       ===================================================== */
+
+    const parking_start =
+      new Date();
+
+
+    const parking_end =
+      new Date(
+        parking_start.getTime() +
+        parking_time * 1000
+      );
+
+
+    /* =====================================================
+       DATABASE OBJECT
+
+       EXACT COLUMN NAMES
+       ===================================================== */
+
+    const vehicleData = {
+
+      QR_ID: qr_id,
+
+      OWNER_NAME: owner_name,
+
+      CAR_NUMBER: car_number,
+
+      PHONE_NUMBER: phone_number,
+
+      PARKING_TIME: parking_time,
+
+      STATUS: status,
+
+      PARK: "YES",
+
+      SLOT_NUMBER: slot_number,
+
+      parking_start:
+        parking_start.toISOString(),
+
+      parking_end:
+        parking_end.toISOString()
+
+    };
+
+
+    console.log(
+      "Vehicle data:",
+      vehicleData
+    );
+
+
+    /* =====================================================
+       INSERT
+       ===================================================== */
+
+    const {
+      error: insertError
+    } = await db
+      .from("cars")
+      .insert([
+        vehicleData
+      ]);
+
+
+    if (insertError) {
+
+      console.error(
+        "INSERT ERROR:",
+        insertError
+      );
+
+      showMessage(
+        "Registration failed: " +
+        insertError.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    /* =====================================================
+       SUCCESS
+       ===================================================== */
+
+    showMessage(
+      "✅ Vehicle registered successfully!",
+      "success"
+    );
+
+
+    /* CLEAR FORM */
+
+    document.getElementById(
+      "qr_id"
+    ).value = "";
+
+    document.getElementById(
+      "owner_name"
+    ).value = "";
+
+    document.getElementById(
+      "car_number"
+    ).value = "";
+
+    document.getElementById(
+      "phone_number"
+    ).value = "";
+
+    document.getElementById(
+      "parking_time"
+    ).value = "";
+
+    document.getElementById(
+      "slot_number"
+    ).value = "";
+
+    document.getElementById(
+      "status"
+    ).value = "OCCUPIED";
+
+
+    loadVehicles();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "UNEXPECTED ERROR:",
+      error
+    );
+
+    showMessage(
+      "Unexpected error: " +
+      error.message,
+      "error"
+    );
+
+  }
+
+  finally {
+
+    button.disabled = false;
+
+    button.textContent =
+      "🚗 Register Vehicle";
+
+  }
+
+}
+
+
+/* =========================================================
+   LOAD VEHICLES
+   ========================================================= */
+
+async function loadVehicles() {
+
+  const container =
+    document.getElementById(
+      "vehicles"
+    );
+
+  container.innerHTML =
+    '<div class="empty">Loading...</div>';
+
+
+  const {
+    data,
+    error
+  } = await db
+    .from("cars")
+    .select(
+      "QR_ID,OWNER_NAME,CAR_NUMBER,PHONE_NUMBER,PARKING_TIME,STATUS,PARK,SLOT_NUMBER,parking_start,parking_end"
+    )
+    .order(
+      "parking_start",
+      {
+        ascending: false
+      }
+    );
+
+
+  if (error) {
+
+    console.error(
+      "LOAD VEHICLES ERROR:",
+      error
+    );
+
+    container.innerHTML =
+      '<div class="empty">Failed to load vehicles:<br>' +
+      escapeHTML(error.message) +
+      '</div>';
+
+    return;
+  }
+
+
+  if (
+    !data ||
+    data.length === 0
+  ) {
+
+    container.innerHTML =
+      '<div class="empty">No vehicles registered.</div>';
+
+    return;
+  }
+
+
+  container.innerHTML = "";
+
+
+  data.forEach(
+    vehicle => {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+      div.className =
+        "vehicle";
+
+
+      const statusClass =
+        vehicle.STATUS === "OCCUPIED"
+          ? "status-occupied"
+          : "status-available";
+
+
+      div.innerHTML = `
+
+        <div class="vehicle-header">
+
+          <h3>
+            🚗
+            ${escapeHTML(
+              vehicle.CAR_NUMBER
+            )}
+          </h3>
+
+          <span class="status ${statusClass}">
+            ${escapeHTML(
+              vehicle.STATUS
+            )}
+          </span>
+
+        </div>
+
+
+        <p>
+          <b>QR ID:</b>
+          ${escapeHTML(
+            vehicle.QR_ID
+          )}
+        </p>
+
+
+        <p>
+          <b>Owner:</b>
+          ${escapeHTML(
+            vehicle.OWNER_NAME
+          )}
+        </p>
+
+
+        <p>
+          <b>Phone:</b>
+          ${escapeHTML(
+            vehicle.PHONE_NUMBER
+          )}
+        </p>
+
+
+        <p>
+          <b>Slot:</b>
+          ${escapeHTML(
+            String(
+              vehicle.SLOT_NUMBER
+            )
+          )}
+        </p>
+
+
+        <p>
+          <b>Parking Time:</b>
+          ${escapeHTML(
+            String(
+              vehicle.PARKING_TIME
+            )
+          )}
+          minutes
+        </p>
+
+
+        <p>
+          <b>Park:</b>
+          ${escapeHTML(
+            String(
+              vehicle.PARK
+            )
+          )}
+        </p>
+
+
+        <div
+          class="countdown"
+          id="timer-${escapeHTML(
+            vehicle.QR_ID
+          )}"
+        >
+          Calculating...
+        </div>
+
+
+        ${
+          vehicle.STATUS === "OCCUPIED"
+          ? `
+            <button
+              class="release-btn"
+              onclick="releaseVehicle('${escapeJS(
+                vehicle.QR_ID
+              )}')"
+            >
+              🚪 Release Vehicle
+            </button>
+          `
+          : ""
+        }
+
+      `;
+
+
+      container.appendChild(
+        div
+      );
+
+
+      updateCountdown(
+        vehicle.QR_ID,
+        vehicle.parking_end
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   COUNTDOWN
+   ========================================================= */
+
+function updateCountdown(
+  qr_id,
+  parking_end
+) {
+
+  const timer =
+    document.getElementById(
+      "timer-" + qr_id
+    );
+
+
+  if (!timer) return;
+
+
+  function update() {
+
+    if (!parking_end) {
+
+      timer.textContent =
+        "No parking time";
+
+      return;
+    }
+
+
+    const end =
+      new Date(
+        parking_end
+      ).getTime();
+
+
+    const now =
+      Date.now();
+
+
+    const difference =
+      end - now;
+
+
+    if (difference <= 0) {
+
+      timer.textContent =
+        "⏰ PARKING TIME EXPIRED";
+
+      timer.className =
+        "countdown expired";
+
+      return;
+    }
+
+
+    const totalSeconds =
+      Math.floor(
+        difference / 1000
+      );
+
+
+    const minutes =
+      Math.floor(
+        totalSeconds / 60
+      );
+
+
+    const seconds =
+      totalSeconds % 60;
+
+
+    timer.textContent =
+      "⏳ Remaining: " +
+      minutes +
+      "m " +
+      seconds +
+      "s";
+
+  }
+
+
+  update();
+
+
+  setInterval(
+    update,
+    1000
+  );
+
+}
+
+
+/* =========================================================
+   RELEASE VEHICLE
+   ========================================================= */
+
+async function releaseVehicle(
+  qr_id
+) {
+
+  const confirmed =
+    confirm(
+      "Release this vehicle?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  const {
+    error
+  } = await db
+    .from("cars")
+    .update({
+
+      STATUS: "AVAILABLE",
+
+      PARK: "NO"
+
+    })
+    .eq(
+      "QR_ID",
+      qr_id
+    );
+
+
+  if (error) {
+
+    console.error(
+      "RELEASE ERROR:",
+      error
+    );
+
+    alert(
+      "Failed to release vehicle:\n" +
+      error.message
+    );
+
+    return;
+  }
+
+
+  alert(
+    "✅ Vehicle released successfully."
+  );
+
+
+  loadVehicles();
+
+}
+
+
+/* =========================================================
+   LOAD NOTIFICATIONS
+   ========================================================= */
+
+async function loadNotifications() {
+
+  const container =
+    document.getElementById(
+      "notifications"
+    );
+
+
+  container.innerHTML =
+    '<div class="empty">Loading...</div>';
+
+
+  const {
+    data,
+    error
+  } = await db
+    .from("notifications")
+    .select(
+      "id,qr_id,car_number,message,status,created_at"
+    )
+    .order(
+      "created_at",
+      {
+        ascending: false
+      }
+    )
+    .limit(30);
+
+
+  if (error) {
+
+    console.error(
+      "NOTIFICATION ERROR:",
+      error
+    );
+
+    container.innerHTML =
+      '<div class="empty">Failed to load notifications.</div>';
+
+    return;
+  }
+
+
+  if (
+    !data ||
+    data.length === 0
+  ) {
+
+    container.innerHTML =
+      '<div class="empty">No notifications yet.</div>';
+
+    return;
+  }
+
+
+  container.innerHTML = "";
+
+
+  data.forEach(
+    notification => {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+      div.className =
+        "notification";
+
+
+      div.innerHTML = `
+
+        <b>🔔 QR ID:</b>
+        ${escapeHTML(
+          notification.qr_id
+        )}
+
+        <br>
+
+        <b>🚗 Car:</b>
+        ${escapeHTML(
+          notification.car_number
+        )}
+
+        <br><br>
+
+        ${escapeHTML(
+          notification.message
+        )}
+
+        <br><br>
+
+        <small>
+          ${formatDate(
+            notification.created_at
+          )}
+        </small>
+
+      `;
+
+
+      container.appendChild(
+        div
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   SECURITY HELPERS
+   ========================================================= */
+
+function escapeHTML(value) {
+
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+function escapeJS(value) {
+
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+    .replace(
+      /'/g,
+      "\\'"
+    )
+    .replace(
+      /"/g,
+      '\\"'
+    );
+
+}
+
+
+function formatDate(date) {
+
+  if (!date) {
+    return "";
+  }
+
+  return new Date(
+    date
+  ).toLocaleString();
+
+}
+
+
+/* =========================================================
+   INITIAL LOAD
+   ========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    loadVehicles();
+
+    loadNotifications();
+
+  }
+);
+
+
+/* =========================================================
+   AUTO REFRESH
+   ========================================================= */
+
+setInterval(
+  loadNotifications,
+  5000
+);
 
 setInterval(
   loadVehicles,
