@@ -1582,7 +1582,9 @@ async function createArduinoCommandFromQR(
 
 
         const command =
-           `SMS|${vehicle.PHONE_NUMBER}|Your car is blocking someone else's vehicle. The parking office will remove it.`;
+            `ALLOT,${data.QR_ID},${data.SLOT_NUMBER},${data.PARKING_TIME},${data.PHONE_NUMBER}`;
+
+
         showCommand(
             command
         );
