@@ -1582,7 +1582,7 @@ async function createArduinoCommandFromQR(
 
 
         const command =
-            `ALLOT,${data.QR_ID},${data.SLOT_NUMBER},${data.PARKING_TIME},${data.PHONE_NUMBER}`;
+           
 
 
         showCommand(
@@ -1621,25 +1621,28 @@ function createExpirySMSCommand(
         vehicle.CAR_NUMBER;
 
 
-    const message =
-        `Your parking time for car ${carNumber} is expired , please move your car or contact the parking office.`;
-
-
-    /*
-       FORMAT:
-
-       SMS|PHONE|MESSAGE
-    */
-
     const command =
-        `SMS|${phone}|${message}`;
+            `ALLOT,${data.QR_ID},${data.SLOT_NUMBER},${data.PARKING_TIME},${data.PHONE_NUMBER}`;
 
 
-    return command;
+        showCommand(
+            command
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unexpected error: " +
+            error.message
+        );
+
+    }
 
 }
-
-
 
 /* =====================================================
    CREATE EXPIRY COMMAND + COPY
